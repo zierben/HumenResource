@@ -29,3 +29,14 @@ npm-debug.log*
 # Temp files
 *.tmp
 *.temp
+
+# Eclipse
+.classpath
+.project
+.factorypath
+.settings/
+
+# Demo files
+hr-demo*.html
+hr-standalone.html
+nul

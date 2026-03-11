@@ -1,0 +1,59 @@
+package com.hr.admin.controller;
+
+import com.hr.admin.dto.Result;
+import com.hr.admin.entity.HrCandidate;
+import com.hr.admin.service.HrCandidateService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/candidates")
+@RequiredArgsConstructor
+public class HrCandidateController {
+    
+    private final HrCandidateService hrCandidateService;
+    
+    @GetMapping
+    public Result<Page<HrCandidate>> list(
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) Integer status) {
+        Page<HrCandidate> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<HrCandidate> wrapper = new LambdaQueryWrapper<>();
+        if (name != null) {
+            wrapper.like(HrCandidate::getName, name);
+        }
+        if (status != null) {
+            wrapper.eq(HrCandidate::getStatus, status);
+        }
+        wrapper.orderByDesc(HrCandidate::getCreateTime);
+        return Result.success(hrCandidateService.page(page, wrapper));
+    }
+    
+    @GetMapping("/{id}")
+    public Result<HrCandidate> getById(@PathVariable Long id) {
+        return Result.success(hrCandidateService.getById(id));
+    }
+    
+    @PostMapping
+    public Result<Void> save(@RequestBody HrCandidate hrCandidate) {
+        hrCandidateService.save(hrCandidate);
+        return Result.success();
+    }
+    
+    @PutMapping("/{id}")
+    public Result<Void> update(@PathVariable Long id, @RequestBody HrCandidate hrCandidate) {
+        hrCandidate.setId(id);
+        hrCandidateService.updateById(hrCandidate);
+        return Result.success();
+    }
+    
+    @DeleteMapping("/{id}")
+    public Result<Void> delete(@PathVariable Long id) {
+        hrCandidateService.removeById(id);
+        return Result.success();
+    }
+}

@@ -1,0 +1,105 @@
+{
+  "page": "Settings.vue",
+  "path": "/settings",
+  "description": "系统设置页面，管理系统配置与参数",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 60,
+  "features": [
+    {
+      "id": "F001",
+      "name": "预算规则配置",
+      "category": "核心功能",
+      "status": "UI_ONLY",
+      "frontend": "完成",
+      "backend": "未实现",
+      "api": null,
+      "description": "预算前置校验、预算不足处理、超预算审批、月度冻结等配置",
+      "notes": "保存按钮未对接后端"
+    },
+    {
+      "id": "F002",
+      "name": "定价规则配置",
+      "category": "核心功能",
+      "status": "UI_ONLY",
+      "frontend": "完成",
+      "backend": "未实现",
+      "api": null,
+      "description": "定价区间校验、各职级定价区间配置",
+      "notes": "保存按钮未对接后端"
+    },
+    {
+      "id": "F003",
+      "name": "供应商规则配置",
+      "category": "核心功能",
+      "status": "UI_ONLY",
+      "frontend": "完成",
+      "backend": "未实现",
+      "api": null,
+      "description": "供应商分级、A级条件、C级限制、降级规则配置",
+      "notes": "保存按钮未对接后端"
+    },
+    {
+      "id": "F004",
+      "name": "审批流程配置",
+      "category": "核心功能",
+      "status": "UI_ONLY",
+      "frontend": "完成",
+      "backend": "未实现",
+      "api": null,
+      "description": "审批时效提醒、超时时间配置",
+      "notes": "流程步骤展示为静态数据"
+    },
+    {
+      "id": "F005",
+      "name": "禅道对接配置",
+      "category": "核心功能",
+      "status": "UI_ONLY",
+      "frontend": "完成",
+      "backend": "未实现",
+      "api": null,
+      "description": "API地址、密钥、自动同步、同步频率配置",
+      "notes": "测试连接按钮仅弹出成功提示"
+    },
+    {
+      "id": "F006",
+      "name": "系统配置",
+      "category": "核心功能",
+      "status": "UI_ONLY",
+      "frontend": "完成",
+      "backend": "未实现",
+      "api": null,
+      "description": "系统名称、数据保留时间、日志审计配置",
+      "notes": "保存按钮未对接后端"
+    },
+    {
+      "id": "F007",
+      "name": "左侧菜单导航",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "左侧菜单切换不同配置面板",
+      "notes": ""
+    },
+    {
+      "id": "F008",
+      "name": "审批流程展示",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "Steps组件展示审批流程步骤",
+      "notes": ""
+    }
+  ],
+  "bugs": [
+    "testZentao方法引用了未导入的ElMessage"
+  ],
+  "improvements": [
+    "所有保存配置功能需要对接后端API",
+    "禅道连接测试需要真实实现",
+    "审批流程配置应从工作流定义中读取"
+  ]
+}

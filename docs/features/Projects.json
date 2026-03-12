@@ -1,0 +1,103 @@
+{
+  "page": "Projects.vue",
+  "path": "/projects",
+  "description": "项目管理页面，支持项目的增删改查",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "项目列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/projects",
+      "description": "分页展示项目列表，包含编号、名称、部门、经理、甲乙方、预算、状态",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "添加项目",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/projects",
+      "description": "弹窗表单添加新项目",
+      "notes": "甲方乙方支持选择或手动输入"
+    },
+    {
+      "id": "F003",
+      "name": "编辑项目",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "PUT /api/projects/{id}",
+      "description": "弹窗表单编辑已有项目",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "删除项目",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "DELETE /api/projects/{id}",
+      "description": "二次确认后删除项目",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "项目详情跳转",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "点击项目名称跳转详情页",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "分页功能",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/projects?pageNum=1&pageSize=10",
+      "description": "列表分页",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "甲乙方选项动态加载",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/projects",
+      "description": "从已有项目中提取甲乙方作为选项",
+      "notes": "支持手动输入新值"
+    },
+    {
+      "id": "F008",
+      "name": "表单验证",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "必填项校验",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加项目搜索功能",
+    "可增加项目状态筛选",
+    "可增加导出功能"
+  ]
+}

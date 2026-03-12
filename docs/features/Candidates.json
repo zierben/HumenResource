@@ -1,0 +1,103 @@
+{
+  "page": "Candidates.vue",
+  "path": "/candidates",
+  "description": "候选人管理页面，管理候选人面试与录用",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "候选人列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/candidates",
+      "description": "展示候选人列表，包含姓名、电话、邮箱、职位、期望薪资、供应商、面试日期、结果、状态",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "添加候选人",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/candidates",
+      "description": "弹窗表单添加新候选人",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "编辑候选人",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "PUT /api/candidates/{id}",
+      "description": "弹窗表单编辑已有候选人",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "删除候选人",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "DELETE /api/candidates/{id}",
+      "description": "二次确认后删除候选人",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "面试状态管理",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "待处理/面试中/已录用/已拒绝四种状态",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "面试结果记录",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "待面试/通过/拒绝三种结果",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "供应商关联",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/suppliers",
+      "description": "选择候选人所属供应商",
+      "notes": "支持搜索筛选"
+    },
+    {
+      "id": "F008",
+      "name": "分页功能",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/candidates?pageNum=1&pageSize=10",
+      "description": "列表分页",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加候选人简历上传功能",
+    "可增加候选人详情页",
+    "可增加面试安排功能"
+  ]
+}

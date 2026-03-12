@@ -1,0 +1,70 @@
+{
+  "page": "Done.vue",
+  "path": "/done",
+  "description": "我的已办页面，展示已处理的审批任务",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "已办列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/workflow/instances/done",
+      "description": "展示已办列表，包含标题、业务类型、状态、发起时间、处理时间",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "查看详情",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/workflow/instances/{id}",
+      "description": "弹窗查看已办详情和审批记录",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "审批记录展示",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "以时间线展示审批历史记录",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "状态展示",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "进行中/已通过/已拒绝/已取消四种状态，不同颜色标签",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "业务类型展示",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "需求申请/付款申请/结算确认三种类型",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加已办筛选功能",
+    "可增加已办搜索功能",
+    "可增加撤销功能（特定条件下）"
+  ]
+}

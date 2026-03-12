@@ -16,8 +16,8 @@
         <el-table-column prop="realName" label="姓名" width="120" />
         <el-table-column prop="role" label="角色" width="120">
           <template #default="{ row }">
-            <el-tag :type="row.role === 'ADMIN' ? 'danger' : 'primary'">
-              {{ row.role === 'ADMIN' ? '管理员' : 'HR' }}
+            <el-tag :type="getRoleType(row.role)">
+              {{ getRoleName(row.role) }}
             </el-tag>
           </template>
         </el-table-column>
@@ -52,7 +52,10 @@
         </el-form-item>
         <el-form-item label="角色" required>
           <el-select v-model="form.role" style="width: 100%">
-            <el-option label="管理员" value="ADMIN" />
+            <el-option label="总经理" value="GM" />
+            <el-option label="副总" value="VP" />
+            <el-option label="部门长" value="DEPT_HEAD" />
+            <el-option label="项目经理" value="PM" />
             <el-option label="HR" value="HR" />
           </el-select>
         </el-form-item>
@@ -107,6 +110,18 @@ const resetForm = reactive({
   username: '',
   newPassword: ''
 })
+
+const roleMap = {
+  GM: { name: '总经理', type: 'danger' },
+  VP: { name: '副总', type: 'warning' },
+  DEPT_HEAD: { name: '部门长', type: 'primary' },
+  PM: { name: '项目经理', type: 'success' },
+  HR: { name: 'HR', type: 'info' },
+  ADMIN: { name: '管理员', type: 'danger' }
+}
+
+const getRoleName = (role) => roleMap[role]?.name || role
+const getRoleType = (role) => roleMap[role]?.type || 'info'
 
 const resetFormData = () => {
   Object.assign(form, {

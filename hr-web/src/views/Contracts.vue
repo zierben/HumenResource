@@ -12,6 +12,38 @@
       </div>
     </div>
     
+    <el-alert 
+      v-if="expiredContracts.length > 0" 
+      :title="`${expiredContracts.length}个合同已过期`" 
+      type="error" 
+      show-icon 
+      :closable="false"
+      style="margin-bottom: 12px"
+    >
+      <template #default>
+        <span v-for="(c, i) in expiredContracts.slice(0, 3)" :key="c.id">
+          {{ c.contractName }}({{ c.endDate }}){{ i < Math.min(expiredContracts.length, 3) - 1 ? '、' : '' }}
+        </span>
+        <span v-if="expiredContracts.length > 3">等{{ expiredContracts.length }}个合同</span>
+      </template>
+    </el-alert>
+    
+    <el-alert 
+      v-if="expiringContracts.length > 0" 
+      :title="`${expiringContracts.length}个合同即将到期`" 
+      type="warning" 
+      show-icon 
+      :closable="false"
+      style="margin-bottom: 16px"
+    >
+      <template #default>
+        <span v-for="(c, i) in expiringContracts.slice(0, 3)" :key="c.id">
+          {{ c.contractName }}({{ c.endDate }}){{ i < Math.min(expiringContracts.length, 3) - 1 ? '、' : '' }}
+        </span>
+        <span v-if="expiringContracts.length > 3">等{{ expiringContracts.length }}个合同</span>
+      </template>
+    </el-alert>
+    
     <el-card shadow="hover">
       <el-table :data="contractList" style="width: 100%" v-loading="loading">
         <el-table-column prop="contractCode" label="合同编号" width="130" />
@@ -30,7 +62,15 @@
           <template #default="{ row }">¥{{ row.amount?.toLocaleString() }}</template>
         </el-table-column>
         <el-table-column prop="startDate" label="开始日期" width="110" />
-        <el-table-column prop="endDate" label="结束日期" width="110" />
+        <el-table-column prop="endDate" label="结束日期" width="120">
+          <template #default="{ row }">
+            <span :class="{ 'text-warning': isExpiringSoon(row.endDate), 'text-danger': isExpired(row.endDate) }">
+              {{ row.endDate }}
+              <el-tag v-if="isExpiringSoon(row.endDate)" type="warning" size="small" style="margin-left: 4px">即将到期</el-tag>
+              <el-tag v-if="isExpired(row.endDate)" type="danger" size="small" style="margin-left: 4px">已过期</el-tag>
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column prop="status" label="状态" width="100">
           <template #default="{ row }">
             <el-tag :type="getStatusType(row.status)" size="small">{{ getStatusText(row.status) }}</el-tag>
@@ -155,6 +195,8 @@ const total = ref(0)
 const contractList = ref([])
 const suppliers = ref([])
 const personnelList = ref([])
+const expiringContracts = ref([])
+const expiredContracts = ref([])
 
 const form = reactive({
   id: null,
@@ -187,6 +229,17 @@ const getSupplierName = (supplierId) => {
   return supplier ? supplier.supplierName : '-'
 }
 
+const isExpiringSoon = (date) => {
+  if (!date) return false
+  const days = (new Date(date) - new Date()) / (1000 * 60 * 60 * 24)
+  return days > 0 && days <= 30
+}
+
+const isExpired = (date) => {
+  if (!date) return false
+  return new Date(date) < new Date()
+}
+
 const fetchData = async () => {
   loading.value = true
   try {
@@ -199,6 +252,34 @@ const fetchData = async () => {
     console.error(e)
   } finally {
     loading.value = false
+  }
+}
+
+const fetchExpiring = async () => {
+  try {
+    const res = await request.get('/contracts/expiring')
+    if (res.code === 200 && Array.isArray(res.data)) {
+      expiringContracts.value = res.data
+    } else {
+      expiringContracts.value = []
+    }
+  } catch (e) {
+    console.error(e)
+    expiringContracts.value = []
+  }
+}
+
+const fetchExpired = async () => {
+  try {
+    const res = await request.get('/contracts/expired')
+    if (res.code === 200 && Array.isArray(res.data)) {
+      expiredContracts.value = res.data
+    } else {
+      expiredContracts.value = []
+    }
+  } catch (e) {
+    console.error(e)
+    expiredContracts.value = []
   }
 }
 
@@ -270,6 +351,8 @@ const handleSubmit = async () => {
       ElMessage.success(isEdit.value ? '编辑成功' : '添加成功')
       showDialog.value = false
       fetchData()
+      fetchExpiring()
+      fetchExpired()
     }
   } catch (e) {
     ElMessage.error('操作失败')
@@ -283,6 +366,8 @@ const handleDelete = async (row) => {
     if (res.code === 200) {
       ElMessage.success('删除成功')
       fetchData()
+      fetchExpiring()
+      fetchExpired()
     }
   } catch (e) {
     if (e !== 'cancel') ElMessage.error('删除失败')
@@ -291,6 +376,8 @@ const handleDelete = async (row) => {
 
 onMounted(() => {
   fetchData()
+  fetchExpiring()
+  fetchExpired()
   fetchSuppliers()
   fetchPersonnel()
 })
@@ -319,5 +406,15 @@ onMounted(() => {
   margin-top: 20px;
   display: flex;
   justify-content: flex-end;
+}
+
+.text-warning {
+  color: #e6a23c;
+  font-weight: 500;
+}
+
+.text-danger {
+  color: #f56c6c;
+  font-weight: 500;
 }
 </style>

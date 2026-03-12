@@ -1,0 +1,103 @@
+{
+  "page": "WorkHours.vue",
+  "path": "/workhours",
+  "description": "工时管理页面，支持工时查询、审核",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "工时列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/work-hours",
+      "description": "展示工时列表，包含人员、日期、工时、项目、备注、状态",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "工时审核",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/work-hours/{id}/approve",
+      "description": "单条工时审核通过",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "批量审核",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/work-hours/{id}/approve",
+      "description": "批量选择工时记录进行审核",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "项目筛选",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/work-hours?projectId=",
+      "description": "按项目筛选工时记录",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "状态筛选",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/work-hours?status=",
+      "description": "按审核状态筛选工时记录",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "日期范围筛选",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/work-hours?startDate=&endDate=",
+      "description": "按日期范围筛选工时记录",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "分页功能",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/work-hours?pageNum=1&pageSize=10",
+      "description": "列表分页",
+      "notes": ""
+    },
+    {
+      "id": "F008",
+      "name": "重置筛选",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "重置所有筛选条件",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加工时录入功能",
+    "可增加工时统计报表",
+    "可增加工时驳回功能"
+  ]
+}

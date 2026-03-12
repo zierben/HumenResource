@@ -1,0 +1,114 @@
+{
+  "page": "Contracts.vue",
+  "path": "/contracts",
+  "description": "合同管理页面，管理供应商合同和人员合同",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "合同列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/contracts",
+      "description": "展示合同列表，包含编号、名称、类型、供应商、金额、起止日期、状态",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "添加合同",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/contracts",
+      "description": "弹窗表单添加新合同，支持供应商合同和人员合同两种类型",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "编辑合同",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "PUT /api/contracts/{id}",
+      "description": "弹窗表单编辑已有合同",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "删除合同",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "DELETE /api/contracts/{id}",
+      "description": "二次确认后删除合同",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "合同类型区分",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "供应商合同和人员合同以不同颜色标签区分",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "合同状态展示",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "生效/到期/终止三种状态展示",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "供应商关联选择",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/suppliers",
+      "description": "从供应商列表中选择关联供应商",
+      "notes": "支持搜索筛选"
+    },
+    {
+      "id": "F008",
+      "name": "人员关联选择",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/personnel",
+      "description": "从人员列表中选择关联人员",
+      "notes": "支持搜索筛选"
+    },
+    {
+      "id": "F009",
+      "name": "分页功能",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/contracts?pageNum=1&pageSize=10",
+      "description": "列表分页",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加合同附件上传功能",
+    "可增加合同到期提醒",
+    "可增加合同模板功能"
+  ]
+}

@@ -286,3 +286,136 @@ INSERT INTO hr_settlement (settlement_code, settlement_month, settlement_year, s
 ('SET202401001', 1, 2024, 1, 1, 158400, 22, 0, 158400, 5, '已支付', NOW(), NOW()),
 ('SET202401002', 1, 2024, 2, 2, 79200, 22, 2400, 76800, 3, NULL, NOW(), NOW()),
 ('SET202401003', 1, 2024, 3, 4, 30800, 22, 0, 30800, 1, NULL, NOW(), NOW());
+
+-- =====================================================
+-- 合同表
+-- =====================================================
+CREATE TABLE IF NOT EXISTS hr_contract (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    contract_code VARCHAR(50) NOT NULL COMMENT '合同编号',
+    contract_name VARCHAR(100) NOT NULL COMMENT '合同名称',
+    contract_type VARCHAR(20) NOT NULL COMMENT '类型: SUPPLIER/PERSONNEL',
+    supplier_id BIGINT COMMENT '供应商ID',
+    personnel_id BIGINT COMMENT '人员ID',
+    project_id BIGINT COMMENT '项目ID',
+    start_date DATE COMMENT '开始日期',
+    end_date DATE COMMENT '结束日期',
+    amount DECIMAL(12,2) DEFAULT 0 COMMENT '合同金额',
+    status INT DEFAULT 1 COMMENT '状态: 1-生效 2-到期 3-终止',
+    sign_date DATE COMMENT '签订日期',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME NOT NULL,
+    update_time DATETIME NOT NULL,
+    deleted INT DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='合同表';
+
+-- 合同数据
+INSERT INTO hr_contract (contract_code, contract_name, contract_type, supplier_id, personnel_id, project_id, start_date, end_date, amount, status, sign_date, remark, create_time, update_time) VALUES
+('HT2024001', '华软科技外包服务合同', 'SUPPLIER', 1, NULL, 1, '2024-01-01', '2024-12-31', 2000000, 1, '2024-01-01', '年度框架合同', NOW(), NOW()),
+('HT2024002', '智联外包服务合同', 'SUPPLIER', 2, NULL, 2, '2024-01-01', '2024-06-30', 800000, 1, '2024-01-01', 'APP重构项目外包', NOW(), NOW()),
+('HT2024003', '博达信息服务合同', 'SUPPLIER', 3, NULL, 3, '2024-02-01', '2024-08-31', 500000, 1, '2024-02-01', '数据平台建设', NOW(), NOW()),
+('HT2024004', '张伟劳动合同', 'PERSONNEL', 1, 1, 1, '2024-01-15', '2025-01-14', 316800, 1, '2024-01-15', 'Java高级工程师', NOW(), NOW()),
+('HT2024005', '李娜劳动合同', 'PERSONNEL', 1, 2, 1, '2024-01-20', '2025-01-19', 304200, 1, '2024-01-20', 'Java高级工程师', NOW(), NOW()),
+('HT2024006', '王磊劳动合同', 'PERSONNEL', 1, 3, 2, '2024-02-01', '2024-07-31', 118800, 1, '2024-02-01', '前端开发工程师', NOW(), NOW()),
+('HT2024007', '赵敏劳动合同', 'PERSONNEL', 2, 4, 2, '2024-02-10', '2024-08-09', 116160, 1, '2024-02-10', '前端开发工程师', NOW(), NOW()),
+('HT2024008', '吴芳劳动合同', 'PERSONNEL', 3, 8, 4, '2024-02-20', DATE_SUB(CURDATE(), INTERVAL 5 DAY), 28000, 2, '2024-02-20', '测试工程师-即将到期', NOW(), NOW()),
+('HT2024009', '郑凯劳动合同', 'PERSONNEL', 1, 9, 4, '2024-02-22', DATE_ADD(CURDATE(), INTERVAL 15 DAY), 27200, 1, '2024-02-22', '测试工程师-即将到期', NOW(), NOW())
+ON DUPLICATE KEY UPDATE contract_name = VALUES(contract_name);
+
+-- =====================================================
+-- 付款记录表
+-- =====================================================
+CREATE TABLE IF NOT EXISTS hr_payment (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    payment_code VARCHAR(50) NOT NULL COMMENT '付款编号',
+    supplier_id BIGINT NOT NULL COMMENT '供应商ID',
+    settlement_id BIGINT COMMENT '结算单ID',
+    amount DECIMAL(12,2) NOT NULL COMMENT '付款金额',
+    payment_date DATE NOT NULL COMMENT '付款日期',
+    payment_method VARCHAR(20) COMMENT '付款方式: BANK/ALIPAY/WECHAT',
+    voucher_path VARCHAR(200) COMMENT '凭证路径',
+    status INT DEFAULT 1 COMMENT '状态: 1-已付款 2-已取消',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME NOT NULL,
+    update_time DATETIME NOT NULL,
+    deleted INT DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='付款记录表';
+
+-- 付款记录数据
+INSERT INTO hr_payment (payment_code, supplier_id, settlement_id, amount, payment_date, payment_method, status, remark, create_time, update_time) VALUES
+('PAY202401001', 1, 1, 158400, '2024-01-31', 'BANK', 1, '1月份结算付款', NOW(), NOW()),
+('PAY202402001', 1, NULL, 500000, '2024-02-15', 'BANK', 1, '预付款', NOW(), NOW()),
+('PAY202402002', 2, NULL, 200000, '2024-02-20', 'BANK', 1, '项目启动款', NOW(), NOW()),
+('PAY202403001', 3, NULL, 100000, '2024-03-01', 'BANK', 1, '首期付款', NOW(), NOW())
+ON DUPLICATE KEY UPDATE payment_code = VALUES(payment_code);
+
+-- =====================================================
+-- 评估表
+-- =====================================================
+CREATE TABLE IF NOT EXISTS hr_evaluation (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    personnel_id BIGINT NOT NULL COMMENT '人员ID',
+    project_id BIGINT COMMENT '项目ID',
+    evaluator VARCHAR(50) COMMENT '评估人',
+    evaluation_month VARCHAR(7) NOT NULL COMMENT '评估月份',
+    score DECIMAL(3,1) DEFAULT 0 COMMENT '总分',
+    work_quality DECIMAL(3,1) DEFAULT 0 COMMENT '工作质量',
+    communication DECIMAL(3,1) DEFAULT 0 COMMENT '沟通能力',
+    punctuality DECIMAL(3,1) DEFAULT 0 COMMENT '考勤',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME NOT NULL,
+    update_time DATETIME NOT NULL,
+    deleted INT DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='评估表';
+
+-- 评估数据
+INSERT INTO hr_evaluation (personnel_id, project_id, evaluator, evaluation_month, score, work_quality, communication, punctuality, remark, create_time, update_time) VALUES
+(1, 1, '李明', '2024-01', 92.5, 95.0, 90.0, 92.0, '表现优秀，技术能力强', NOW(), NOW()),
+(2, 1, '李明', '2024-01', 88.0, 90.0, 85.0, 89.0, '工作认真负责', NOW(), NOW()),
+(3, 2, '王强', '2024-02', 85.0, 88.0, 82.0, 85.0, '前端技术扎实', NOW(), NOW()),
+(11, 1, '李明', '2024-01', 90.0, 92.0, 88.0, 90.0, '中级工程师表现良好', NOW(), NOW())
+ON DUPLICATE KEY UPDATE score = VALUES(score);
+
+-- =====================================================
+-- 消息表
+-- =====================================================
+CREATE TABLE IF NOT EXISTS hr_message (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    title VARCHAR(100) NOT NULL COMMENT '标题',
+    content VARCHAR(1000) COMMENT '内容',
+    type VARCHAR(20) COMMENT '类型: SYSTEM/REMINDER/NOTICE',
+    is_read INT DEFAULT 0 COMMENT '是否已读: 0-未读 1-已读',
+    create_time DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消息表';
+
+-- 消息数据
+INSERT INTO hr_message (user_id, title, content, type, is_read, create_time) VALUES
+(1, '合同到期提醒', '您有2个合同即将在30天内到期，请及时处理', 'REMINDER', 0, NOW()),
+(1, '结算审批通知', '结算单SET202401002已提交审批', 'NOTICE', 1, NOW()),
+(2, '新人员入职', '孙华、周杰将于3月1日入职', 'NOTICE', 0, NOW())
+ON DUPLICATE KEY UPDATE title = VALUES(title);
+
+-- =====================================================
+-- 操作日志表
+-- =====================================================
+CREATE TABLE IF NOT EXISTS hr_operation_log (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT COMMENT '用户ID',
+    username VARCHAR(50) COMMENT '用户名',
+    module VARCHAR(50) COMMENT '模块',
+    action VARCHAR(50) COMMENT '操作',
+    target_type VARCHAR(50) COMMENT '目标类型',
+    target_id BIGINT COMMENT '目标ID',
+    detail VARCHAR(1000) COMMENT '详情',
+    ip VARCHAR(50) COMMENT 'IP地址',
+    create_time DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='操作日志表';
+
+-- 操作日志数据
+INSERT INTO hr_operation_log (user_id, username, module, action, target_type, target_id, detail, ip, create_time) VALUES
+(1, 'admin', '人员管理', '新增', '人员', 6, '新增人员: 孙华', '127.0.0.1', NOW()),
+(1, 'admin', '人员管理', '新增', '人员', 7, '新增人员: 周杰', '127.0.0.1', NOW()),
+(1, 'admin', '合同管理', '新增', '合同', 1, '新增合同: HT2024001', '127.0.0.1', NOW()),
+(2, 'hr001', '工时管理', '审批', '工时', 1, '审批通过工时记录', '127.0.0.1', NOW())
+ON DUPLICATE KEY UPDATE detail = VALUES(detail);

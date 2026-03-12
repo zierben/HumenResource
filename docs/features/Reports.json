@@ -1,0 +1,82 @@
+{
+  "page": "Reports.vue",
+  "path": "/reports",
+  "description": "报表中心页面，展示外包人力数据分析与报表",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "统计概览",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/reports/summary",
+      "description": "展示在岗人员、进行中项目、合作供应商、累计结算四个核心指标",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "项目成本分布图",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/reports/cost-by-project",
+      "description": "饼图展示各项目外包成本占比",
+      "notes": "使用ECharts"
+    },
+    {
+      "id": "F003",
+      "name": "供应商人员占比图",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/reports/personnel-by-supplier",
+      "description": "饼图展示各供应商人员占比",
+      "notes": "使用ECharts"
+    },
+    {
+      "id": "F004",
+      "name": "月度费用趋势图",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/reports/monthly-trend",
+      "description": "折线图展示预算与实际费用趋势对比",
+      "notes": "使用ECharts"
+    },
+    {
+      "id": "F005",
+      "name": "数据加载状态",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "各图表独立加载状态",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "金额格式化",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "金额数字千分位格式化展示",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加更多报表类型",
+    "可增加报表导出功能",
+    "可增加自定义报表功能",
+    "可增加时间范围选择"
+  ]
+}

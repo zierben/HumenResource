@@ -1,0 +1,173 @@
+{
+  "page": "Dashboard.vue",
+  "path": "/dashboard",
+  "description": "首页仪表盘",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 40,
+  "features": [
+    {
+      "id": "F001",
+      "name": "轮播图Banner",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": "-",
+      "description": "4张轮播图，自动播放，渐变背景",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "Banner按钮跳转",
+      "category": "交互功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": "-",
+      "description": "点击按钮跳转到对应页面",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "统计卡片展示",
+      "category": "数据展示",
+      "status": "STATIC_DATA",
+      "frontend": "完成",
+      "backend": "未对接",
+      "api": "/api/reports/summary (未调用)",
+      "description": "4个统计卡片，数据硬编码",
+      "notes": "需要调用后端API获取实时数据",
+      "todo": [
+        "调用/api/reports/summary获取统计数据",
+        "计算趋势百分比",
+        "定时刷新数据"
+      ]
+    },
+    {
+      "id": "F004",
+      "name": "统计卡片点击跳转",
+      "category": "交互功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": "-",
+      "description": "点击卡片跳转到对应列表页",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "快捷入口",
+      "category": "导航功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": "-",
+      "description": "8个快捷功能入口，带角标提示",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "快捷入口自定义",
+      "category": "个性化",
+      "status": "UI_ONLY",
+      "frontend": "仅按钮",
+      "backend": "未实现",
+      "api": "无",
+      "description": "自定义按钮展示，无实际功能",
+      "notes": "需要用户偏好设置存储",
+      "todo": [
+        "用户偏好设置表",
+        "保存/读取配置API",
+        "拖拽排序功能"
+      ]
+    },
+    {
+      "id": "F007",
+      "name": "预算趋势图表",
+      "category": "数据可视化",
+      "status": "STATIC_DATA",
+      "frontend": "完成",
+      "backend": "未对接",
+      "api": "/api/reports/monthly-trend (未调用)",
+      "description": "ECharts柱状图，数据硬编码",
+      "notes": "需要调用后端API",
+      "todo": [
+        "调用/api/reports/monthly-trend",
+        "支持周/月/年切换",
+        "图表数据动态更新"
+      ]
+    },
+    {
+      "id": "F008",
+      "name": "图表周期切换",
+      "category": "交互功能",
+      "status": "UI_ONLY",
+      "frontend": "仅UI切换",
+      "backend": "未实现",
+      "api": "无",
+      "description": "周/月/年RadioGroup展示，不切换数据",
+      "notes": "需要根据选择调用不同API或参数"
+    },
+    {
+      "id": "F009",
+      "name": "人员分布饼图",
+      "category": "数据可视化",
+      "status": "STATIC_DATA",
+      "frontend": "完成",
+      "backend": "未对接",
+      "api": "/api/reports/personnel-by-supplier (未调用)",
+      "description": "ECharts饼图，数据硬编码",
+      "notes": "需要调用后端API",
+      "todo": [
+        "调用/api/reports/personnel-by-supplier",
+        "显示实际部门/供应商分布"
+      ]
+    },
+    {
+      "id": "F010",
+      "name": "待办任务列表",
+      "category": "数据展示",
+      "status": "STATIC_DATA",
+      "frontend": "完成",
+      "backend": "未对接",
+      "api": "/api/workflow/instances/pending (未调用)",
+      "description": "任务卡片展示，数据硬编码",
+      "notes": "需要调用工作流待办API",
+      "todo": [
+        "调用/api/workflow/instances/pending",
+        "显示真实待办任务",
+        "优先级排序"
+      ]
+    },
+    {
+      "id": "F011",
+      "name": "待办任务处理",
+      "category": "业务功能",
+      "status": "UI_ONLY",
+      "frontend": "仅按钮",
+      "backend": "未实现",
+      "api": "无",
+      "description": "处理按钮展示，点击只跳转待办页",
+      "notes": "应该直接打开审批弹窗或跳转详情"
+    },
+    {
+      "id": "F012",
+      "name": "图表响应式",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": "-",
+      "description": "窗口resize时图表自适应",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "数据实时刷新（WebSocket或轮询）",
+    "图表数据导出",
+    "自定义仪表盘布局",
+    "添加更多统计维度",
+    "数据下钻功能"
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "page": "Evaluations.vue",
+  "path": "/evaluations",
+  "description": "绩效考核页面，管理人员绩效评估",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "考核列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/evaluations",
+      "description": "展示考核列表，包含人员、项目、评估人、月份、得分、各项评分、备注",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "添加考核",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/evaluations",
+      "description": "弹窗表单添加新考核记录",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "编辑考核",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "PUT /api/evaluations/{id}",
+      "description": "弹窗表单编辑已有考核记录",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "删除考核",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "DELETE /api/evaluations/{id}",
+      "description": "二次确认后删除考核记录",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "评分维度",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "工作质量、沟通能力、守时性、综合得分四个评分维度",
+      "notes": "使用星级评分组件"
+    },
+    {
+      "id": "F006",
+      "name": "得分等级展示",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "根据得分显示不同颜色标签",
+      "notes": ">=4.5绿色, >=3.5蓝色, >=2.5黄色, <2.5红色"
+    },
+    {
+      "id": "F007",
+      "name": "人员选择",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/personnel",
+      "description": "从人员列表中选择被考核人",
+      "notes": "支持搜索筛选"
+    },
+    {
+      "id": "F008",
+      "name": "项目选择",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/projects",
+      "description": "从项目列表中选择考核项目",
+      "notes": "支持搜索筛选"
+    },
+    {
+      "id": "F009",
+      "name": "分页功能",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/evaluations?pageNum=1&pageSize=10",
+      "description": "列表分页",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加考核模板功能",
+    "可增加考核周期批量生成",
+    "可增加考核统计分析"
+  ]
+}

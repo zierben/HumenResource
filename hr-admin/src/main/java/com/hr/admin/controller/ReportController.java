@@ -10,10 +10,14 @@ import com.hr.admin.service.HrPersonnelService;
 import com.hr.admin.service.HrProjectService;
 import com.hr.admin.service.HrSettlementService;
 import com.hr.admin.service.HrSupplierService;
+import com.hr.admin.service.HrRequirementService;
+import com.hr.admin.entity.HrRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,6 +30,7 @@ public class ReportController {
     private final HrSupplierService hrSupplierService;
     private final HrPersonnelService hrPersonnelService;
     private final HrSettlementService hrSettlementService;
+    private final HrRequirementService hrRequirementService;
     
     @GetMapping("/cost-by-project")
     public Result<List<Map<String, Object>>> getCostByProject() {
@@ -62,6 +67,7 @@ public class ReportController {
                 .list();
         
         Map<Long, Long> supplierCountMap = personnelList.stream()
+                .filter(p -> p.getSupplierId() != null)
                 .collect(Collectors.groupingBy(HrPersonnel::getSupplierId, Collectors.counting()));
         
         List<Map<String, Object>> result = suppliers.stream()
@@ -79,11 +85,15 @@ public class ReportController {
     
     @GetMapping("/monthly-trend")
     public Result<Map<String, Object>> getMonthlyTrend(@RequestParam(defaultValue = "2024") Integer year) {
+        int currentYear = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+        
         List<HrSettlement> settlements = hrSettlementService.lambdaQuery()
                 .eq(HrSettlement::getSettlementYear, year)
                 .list();
         
         Map<Integer, BigDecimal> monthlyActual = settlements.stream()
+                .filter(s -> s.getSettlementMonth() != null)
                 .collect(Collectors.groupingBy(
                         HrSettlement::getSettlementMonth,
                         Collectors.reducing(BigDecimal.ZERO,
@@ -91,14 +101,47 @@ public class ReportController {
                                 BigDecimal::add)
                 ));
         
+        Map<Integer, BigDecimal> lastYearMonthly = new HashMap<>();
+        if (year == currentYear) {
+            List<HrSettlement> lastYearSettlements = hrSettlementService.lambdaQuery()
+                    .eq(HrSettlement::getSettlementYear, year - 1)
+                    .list();
+            lastYearMonthly = lastYearSettlements.stream()
+                    .filter(s -> s.getSettlementMonth() != null)
+                    .collect(Collectors.groupingBy(
+                            HrSettlement::getSettlementMonth,
+                            Collectors.reducing(BigDecimal.ZERO,
+                                    s -> s.getFinalAmount() != null ? s.getFinalAmount() : BigDecimal.ZERO,
+                                    BigDecimal::add)
+                    ));
+        }
+        
+        BigDecimal yearTotalActual = BigDecimal.ZERO;
+        BigDecimal yearTotalBudget = BigDecimal.ZERO;
+        for (int i = 1; i <= 12; i++) {
+            yearTotalActual = yearTotalActual.add(monthlyActual.getOrDefault(i, BigDecimal.ZERO));
+            yearTotalBudget = yearTotalBudget.add(lastYearMonthly.getOrDefault(i, BigDecimal.ZERO).multiply(new BigDecimal("1.1")));
+        }
+        
+        BigDecimal avgMonthlyBudget = yearTotalBudget.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
+        if (avgMonthlyBudget.compareTo(BigDecimal.ZERO) == 0) {
+            avgMonthlyBudget = new BigDecimal("150000");
+        }
+        
         List<String> months = Arrays.asList("1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月");
         List<BigDecimal> actualData = new ArrayList<>();
         List<BigDecimal> budgetData = new ArrayList<>();
         
         for (int i = 1; i <= 12; i++) {
-            actualData.add(monthlyActual.getOrDefault(i, BigDecimal.ZERO)
-                    .divide(new BigDecimal("10000"), 2, BigDecimal.ROUND_HALF_UP));
-            budgetData.add(new BigDecimal("15"));
+            BigDecimal actual = monthlyActual.getOrDefault(i, BigDecimal.ZERO)
+                    .divide(new BigDecimal("10000"), 2, RoundingMode.HALF_UP);
+            actualData.add(actual);
+            
+            if (year == currentYear && i > currentMonth) {
+                budgetData.add(BigDecimal.ZERO);
+            } else {
+                budgetData.add(avgMonthlyBudget.divide(new BigDecimal("10000"), 2, RoundingMode.HALF_UP));
+            }
         }
         
         Map<String, Object> result = new HashMap<>();
@@ -116,6 +159,8 @@ public class ReportController {
                 .eq(HrPersonnel::getStatus, "ON_DUTY")
                 .count();
         
+        long lastMonthOnDuty = calculateLastMonthPersonnel();
+        
         long totalProjects = hrProjectService.count();
         long activeProjects = hrProjectService.lambdaQuery()
                 .eq(HrProject::getStatus, 1)
@@ -127,6 +172,23 @@ public class ReportController {
                 .map(s -> s.getFinalAmount() != null ? s.getFinalAmount() : BigDecimal.ZERO)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         
+        BigDecimal lastMonthCost = calculateLastMonthCost();
+        
+        int personnelTrend = calculateTrend(onDutyPersonnel, lastMonthOnDuty);
+        int costTrend = calculateTrend(totalCost, lastMonthCost);
+        
+        long pendingRequirements = hrRequirementService.lambdaQuery()
+                .eq(HrRequirement::getStatus, 0)
+                .count();
+        
+        BigDecimal currentMonthCost = calculateCurrentMonthCost();
+        BigDecimal currentMonthBudget = new BigDecimal("150000");
+        int budgetExecutionRate = 0;
+        if (currentMonthBudget.compareTo(BigDecimal.ZERO) > 0) {
+            budgetExecutionRate = currentMonthCost.multiply(new BigDecimal("100"))
+                    .divide(currentMonthBudget, 0, RoundingMode.HALF_UP).intValue();
+        }
+        
         Map<String, Object> result = new HashMap<>();
         result.put("totalPersonnel", totalPersonnel);
         result.put("onDutyPersonnel", onDutyPersonnel);
@@ -134,7 +196,54 @@ public class ReportController {
         result.put("activeProjects", activeProjects);
         result.put("totalSuppliers", totalSuppliers);
         result.put("totalCost", totalCost);
+        result.put("personnelTrend", personnelTrend);
+        result.put("costTrend", costTrend);
+        result.put("pendingRequirements", pendingRequirements);
+        result.put("budgetExecutionRate", budgetExecutionRate);
         
         return Result.success(result);
+    }
+    
+    private long calculateLastMonthPersonnel() {
+        LocalDate lastMonth = LocalDate.now().minusMonths(1);
+        return hrPersonnelService.lambdaQuery()
+                .eq(HrPersonnel::getStatus, "ON_DUTY")
+                .le(HrPersonnel::getEntryDate, lastMonth)
+                .count();
+    }
+    
+    private BigDecimal calculateLastMonthCost() {
+        LocalDate lastMonth = LocalDate.now().minusMonths(1);
+        return hrSettlementService.lambdaQuery()
+                .eq(HrSettlement::getSettlementYear, lastMonth.getYear())
+                .eq(HrSettlement::getSettlementMonth, lastMonth.getMonthValue())
+                .list()
+                .stream()
+                .map(s -> s.getFinalAmount() != null ? s.getFinalAmount() : BigDecimal.ZERO)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    
+    private BigDecimal calculateCurrentMonthCost() {
+        LocalDate now = LocalDate.now();
+        return hrSettlementService.lambdaQuery()
+                .eq(HrSettlement::getSettlementYear, now.getYear())
+                .eq(HrSettlement::getSettlementMonth, now.getMonthValue())
+                .list()
+                .stream()
+                .map(s -> s.getFinalAmount() != null ? s.getFinalAmount() : BigDecimal.ZERO)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+    
+    private int calculateTrend(long current, long last) {
+        if (last == 0) return 0;
+        return (int) ((current - last) * 100 / last);
+    }
+    
+    private int calculateTrend(BigDecimal current, BigDecimal last) {
+        if (last == null || last.compareTo(BigDecimal.ZERO) == 0) return 0;
+        return current.subtract(last)
+                .multiply(new BigDecimal("100"))
+                .divide(last, 0, RoundingMode.HALF_UP)
+                .intValue();
     }
 }

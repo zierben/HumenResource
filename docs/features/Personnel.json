@@ -1,0 +1,233 @@
+{
+  "page": "Personnel.vue",
+  "path": "/personnel",
+  "description": "人员管理列表页",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 85,
+  "features": [
+    {
+      "id": "F001",
+      "name": "人员列表查询",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/personnel",
+      "description": "分页查询人员列表",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "人员详情跳转",
+      "category": "导航功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": "-",
+      "description": "点击姓名跳转详情页",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "添加人员",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/personnel",
+      "description": "弹窗表单，提交新增人员",
+      "notes": "自动生成人员编码"
+    },
+    {
+      "id": "F004",
+      "name": "表单验证",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": "-",
+      "description": "必填项校验",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "供应商下拉选择",
+      "category": "关联数据",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/suppliers",
+      "description": "加载供应商列表供选择",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "项目下拉选择",
+      "category": "关联数据",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/projects",
+      "description": "加载项目列表供选择",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "入场操作",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/personnel/{id}/entry",
+      "description": "待入场状态人员执行入场",
+      "notes": "状态变更为ON_DUTY"
+    },
+    {
+      "id": "F008",
+      "name": "离场操作",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/personnel/{id}/exit",
+      "description": "在岗人员执行离场",
+      "notes": "状态变更为OFF_DUTY"
+    },
+    {
+      "id": "F009",
+      "name": "调配操作",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/personnel/{id}/transfer",
+      "description": "在岗人员调配到其他项目",
+      "notes": "需要选择目标项目"
+    },
+    {
+      "id": "F010",
+      "name": "状态标签展示",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": "-",
+      "description": "不同状态显示不同颜色标签",
+      "notes": ""
+    },
+    {
+      "id": "F011",
+      "name": "分页",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "-",
+      "description": "分页组件，翻页查询",
+      "notes": ""
+    },
+    {
+      "id": "F012",
+      "name": "搜索过滤",
+      "category": "查询功能",
+      "status": "NOT_IMPLEMENTED",
+      "frontend": "未实现",
+      "backend": "部分实现",
+      "api": "GET /api/personnel (支持参数)",
+      "description": "无搜索框，无法按姓名/状态筛选",
+      "notes": "后端支持参数查询，前端未实现",
+      "todo": [
+        "添加搜索输入框",
+        "状态下拉筛选",
+        "部门/供应商筛选"
+      ]
+    },
+    {
+      "id": "F013",
+      "name": "编辑人员",
+      "category": "核心功能",
+      "status": "NOT_IMPLEMENTED",
+      "frontend": "未实现",
+      "backend": "完成",
+      "api": "PUT /api/personnel/{id}",
+      "description": "无编辑功能入口",
+      "notes": "后端API存在，前端未实现",
+      "todo": [
+        "添加编辑按钮",
+        "复用新增表单弹窗",
+        "调用更新API"
+      ]
+    },
+    {
+      "id": "F014",
+      "name": "删除人员",
+      "category": "核心功能",
+      "status": "NOT_IMPLEMENTED",
+      "frontend": "未实现",
+      "backend": "完成",
+      "api": "DELETE /api/personnel/{id}",
+      "description": "无删除功能",
+      "notes": "软删除，后端API存在",
+      "todo": [
+        "添加删除按钮",
+        "确认提示",
+        "调用删除API"
+      ]
+    },
+    {
+      "id": "F015",
+      "name": "导出Excel",
+      "category": "便捷功能",
+      "status": "NOT_IMPLEMENTED",
+      "frontend": "未实现",
+      "backend": "未实现",
+      "api": "无",
+      "description": "无法导出人员列表",
+      "notes": "",
+      "todo": [
+        "后端实现Excel导出",
+        "前端添加导出按钮"
+      ]
+    },
+    {
+      "id": "F016",
+      "name": "批量导入",
+      "category": "便捷功能",
+      "status": "NOT_IMPLEMENTED",
+      "frontend": "未实现",
+      "backend": "未实现",
+      "api": "无",
+      "description": "无法批量导入人员",
+      "notes": "",
+      "todo": [
+        "Excel模板下载",
+        "文件上传解析",
+        "批量保存"
+      ]
+    },
+    {
+      "id": "F017",
+      "name": "合同到期提醒",
+      "category": "提醒功能",
+      "status": "NOT_IMPLEMENTED",
+      "frontend": "未实现",
+      "backend": "未实现",
+      "api": "无",
+      "description": "无合同到期预警",
+      "notes": "应高亮显示即将到期人员",
+      "todo": [
+        "后端计算到期天数",
+        "前端高亮展示",
+        "消息提醒"
+      ]
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "高级搜索（组合条件）",
+    "列表排序功能",
+    "列显示/隐藏配置",
+    "批量操作（批量调配、离场）",
+    "人员照片上传"
+  ]
+}

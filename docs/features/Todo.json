@@ -1,0 +1,81 @@
+{
+  "page": "Todo.vue",
+  "path": "/todo",
+  "description": "我的待办页面，展示待处理的审批任务",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "待办列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/workflow/instances/pending",
+      "description": "展示待办列表，包含标题、业务类型、状态、发起时间",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "查看详情",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/workflow/instances/{id}",
+      "description": "弹窗查看待办详情和审批记录",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "审批通过",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/workflow/instances/{id}/approve",
+      "description": "审批通过待办任务",
+      "notes": "可填写审批意见"
+    },
+    {
+      "id": "F004",
+      "name": "审批拒绝",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/workflow/instances/{id}/reject",
+      "description": "审批拒绝待办任务",
+      "notes": "可填写拒绝原因"
+    },
+    {
+      "id": "F005",
+      "name": "审批记录展示",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "以时间线展示审批历史记录",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "业务类型展示",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "需求申请/付款申请/结算确认三种类型",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加待办筛选功能",
+    "可增加批量审批功能",
+    "可增加待办提醒功能"
+  ]
+}

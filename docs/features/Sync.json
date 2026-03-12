@@ -1,0 +1,81 @@
+{
+  "page": "Sync.vue",
+  "path": "/sync",
+  "description": "数据同步页面，管理外部系统数据同步",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 85,
+  "features": [
+    {
+      "id": "F001",
+      "name": "禅道同步功能",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/sync/execute",
+      "description": "支持人员、项目、工时三种数据从禅道同步",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "业财系统对接",
+      "category": "核心功能",
+      "status": "NOT_IMPLEMENTED",
+      "frontend": "仅UI",
+      "backend": "未实现",
+      "api": null,
+      "description": "项目推送、费用推送、预算推送到业财系统",
+      "notes": "按钮禁用状态，显示待对接"
+    },
+    {
+      "id": "F003",
+      "name": "同步日志展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/sync/logs",
+      "description": "展示同步日志，包含类型、方向、状态、数量、时间等",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "同步状态展示",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "成功/失败/进行中三种状态以不同颜色展示",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "重试功能",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/sync/retry/{id}",
+      "description": "失败的同步任务可点击重试",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "刷新日志",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/sync/logs",
+      "description": "手动刷新同步日志列表",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "业财系统对接需要实现",
+    "可增加同步进度实时显示",
+    "可增加同步配置管理"
+  ]
+}

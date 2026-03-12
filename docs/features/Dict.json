@@ -1,0 +1,92 @@
+{
+  "page": "Dict.vue",
+  "path": "/settings/dict",
+  "description": "字典管理页面，管理系统中使用的字典数据",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "字典类型列表",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/dict/types",
+      "description": "左侧展示字典类型菜单",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "字典数据列表",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/dict/data/{type}",
+      "description": "右侧展示选中类型的字典数据",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "添加字典数据",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/dict/data",
+      "description": "弹窗表单添加新字典数据",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "编辑字典数据",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "PUT /api/dict/data/{id}",
+      "description": "弹窗表单编辑已有字典数据",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "删除字典数据",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "DELETE /api/dict/data/{id}",
+      "description": "二次确认后删除字典数据",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "排序功能",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "设置字典数据的排序顺序",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "状态管理",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "启用/禁用字典数据状态",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加字典类型管理功能",
+    "可增加字典数据导入导出",
+    "可增加字典数据搜索功能"
+  ]
+}

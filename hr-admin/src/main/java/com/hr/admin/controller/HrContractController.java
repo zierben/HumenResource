@@ -8,6 +8,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/api/contracts")
 @RequiredArgsConstructor
@@ -55,5 +60,32 @@ public class HrContractController {
     public Result<Void> delete(@PathVariable Long id) {
         hrContractService.removeById(id);
         return Result.success();
+    }
+    
+    @GetMapping("/expiring")
+    public Result<List<HrContract>> getExpiring(@RequestParam(defaultValue = "30") Integer days) {
+        LocalDate today = LocalDate.now();
+        LocalDate endDate = today.plusDays(days);
+        
+        List<HrContract> expiringContracts = hrContractService.lambdaQuery()
+                .eq(HrContract::getStatus, 1)
+                .between(HrContract::getEndDate, today, endDate)
+                .orderByAsc(HrContract::getEndDate)
+                .list();
+        
+        return Result.success(expiringContracts);
+    }
+    
+    @GetMapping("/expired")
+    public Result<List<HrContract>> getExpired() {
+        LocalDate today = LocalDate.now();
+        
+        List<HrContract> expiredContracts = hrContractService.lambdaQuery()
+                .lt(HrContract::getEndDate, today)
+                .in(HrContract::getStatus, 1, 2)
+                .orderByAsc(HrContract::getEndDate)
+                .list();
+        
+        return Result.success(expiredContracts);
     }
 }

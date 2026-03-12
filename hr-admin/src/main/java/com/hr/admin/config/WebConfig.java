@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
             "/api/auth/login",
             "/api/auth/logout",
             "/api/auth/reset-admin",
-            "/error"
+            "/api/auth/reset-all"
     );
     
     @Override

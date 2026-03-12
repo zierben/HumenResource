@@ -1,0 +1,103 @@
+{
+  "page": "Messages.vue",
+  "path": "/messages",
+  "description": "消息通知页面，管理系统消息与通知",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "消息列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/messages",
+      "description": "展示消息列表，包含标题、内容、类型、状态、发送时间",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "发送消息",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/messages",
+      "description": "弹窗表单发送新消息",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "查看消息详情",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "弹窗查看消息详细内容",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "标记已读",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "PUT /api/messages/{id}/read",
+      "description": "将消息标记为已读",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "删除消息",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "DELETE /api/messages/{id}",
+      "description": "二次确认后删除消息",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "消息类型分类",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "系统通知/任务提醒/审批通知/其他四种类型",
+      "notes": "不同类型显示不同颜色标签"
+    },
+    {
+      "id": "F007",
+      "name": "未读消息高亮",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "未读消息行背景高亮，标题加粗",
+      "notes": ""
+    },
+    {
+      "id": "F008",
+      "name": "分页功能",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/messages?pageNum=1&pageSize=10",
+      "description": "列表分页",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加批量标记已读",
+    "可增加消息搜索功能",
+    "可增加消息推送功能（WebSocket）"
+  ]
+}

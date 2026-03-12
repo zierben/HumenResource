@@ -37,9 +37,10 @@
             <el-tag :type="getStatusType(row.status)" size="small">{{ getStatusText(row.status) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150" fixed="right">
+        <el-table-column label="操作" width="200" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link @click="openEditDialog(row)">编辑</el-button>
+            <el-button type="success" link @click="handleConvert(row)" v-if="row.status === 2">转正式</el-button>
             <el-button type="danger" link @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
@@ -138,9 +139,11 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/api/index'
 
+const router = useRouter()
 const loading = ref(false)
 const showDialog = ref(false)
 const isEdit = ref(false)
@@ -276,6 +279,20 @@ const handleDelete = async (row) => {
     }
   } catch (e) {
     if (e !== 'cancel') ElMessage.error('删除失败')
+  }
+}
+
+const handleConvert = async (row) => {
+  try {
+    await ElMessageBox.confirm(`确认将候选人"${row.name}"转为正式人员？`, '提示', { type: 'warning' })
+    const res = await request.post(`/candidates/${row.id}/convert`)
+    if (res.code === 200) {
+      ElMessage.success('已转为正式人员')
+      fetchData()
+      router.push('/personnel')
+    }
+  } catch (e) {
+    if (e !== 'cancel') ElMessage.error('操作失败')
   }
 }
 

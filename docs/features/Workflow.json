@@ -1,0 +1,125 @@
+{
+  "page": "Workflow.vue",
+  "path": "/workflow",
+  "description": "工作流定义页面，配置审批流程",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "流程列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/workflow/workflows",
+      "description": "展示流程列表，包含编码、名称、描述、状态",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "添加流程",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/workflow/workflows",
+      "description": "弹窗表单添加新流程",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "编辑流程",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "PUT /api/workflow/workflows/{id}",
+      "description": "弹窗表单编辑已有流程",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "删除流程",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "DELETE /api/workflow/workflows/{id}",
+      "description": "二次确认后删除流程",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "节点配置",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/workflow/nodes/workflow/{id}, POST /api/workflow/nodes/batch",
+      "description": "弹窗配置流程节点",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "添加节点",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "添加审批节点",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "删除节点",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "删除审批节点",
+      "notes": ""
+    },
+    {
+      "id": "F008",
+      "name": "节点类型设置",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "开始/审批/抄送/结束四种节点类型",
+      "notes": ""
+    },
+    {
+      "id": "F009",
+      "name": "审批角色配置",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "配置节点的审批角色：CEO/VP/部门长/PM/HR/财务",
+      "notes": ""
+    },
+    {
+      "id": "F010",
+      "name": "流程启用/禁用",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "PUT /api/workflow/workflows/{id}",
+      "description": "切换流程启用状态",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加流程可视化编辑器",
+    "可增加节点条件配置",
+    "可增加流程版本管理"
+  ]
+}

@@ -9,10 +9,28 @@
         <el-button type="primary" @click="openAddDialog">
           <el-icon><Plus /></el-icon>添加人员
         </el-button>
+        <el-button @click="handleExport">
+          <el-icon><Download /></el-icon>导出Excel
+        </el-button>
       </div>
     </div>
     
     <el-card shadow="hover">
+      <div class="search-bar">
+        <el-input v-model="searchName" placeholder="搜索姓名" clearable style="width: 200px" @keyup.enter="handleSearch" />
+        <el-select v-model="searchStatus" placeholder="状态筛选" clearable style="width: 140px" @change="handleSearch">
+          <el-option label="待入场" value="PENDING_ENTRY" />
+          <el-option label="在岗" value="ON_DUTY" />
+          <el-option label="请假" value="LEAVE" />
+          <el-option label="已离场" value="OFF_DUTY" />
+        </el-select>
+        <el-select v-model="searchProjectId" placeholder="项目筛选" clearable style="width: 160px" @change="handleSearch">
+          <el-option v-for="p in projects" :key="p.id" :label="p.projectName" :value="p.id" />
+        </el-select>
+        <el-button type="primary" @click="handleSearch">搜索</el-button>
+        <el-button @click="handleReset">重置</el-button>
+      </div>
+      
       <el-table :data="personnelList" style="width: 100%" v-loading="loading">
         <el-table-column prop="personnelCode" label="人员编号" width="130" />
         <el-table-column prop="name" label="姓名" width="100">
@@ -31,17 +49,23 @@
           <template #default="{ row }">¥{{ row.dailyRate }}</template>
         </el-table-column>
         <el-table-column prop="entryDate" label="入场时间" width="120" />
-        <el-table-column prop="contractEndDate" label="合同到期" width="120" />
+        <el-table-column prop="contractEndDate" label="合同到期" width="120">
+          <template #default="{ row }">
+            <span :class="{ 'text-danger': isExpiringSoon(row.contractEndDate) }">{{ row.contractEndDate }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="status" label="状态" width="100">
           <template #default="{ row }">
             <el-tag :type="getStatusType(row.status)">{{ getStatusText(row.status) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="240" fixed="right">
+        <el-table-column label="操作" width="280" fixed="right">
           <template #default="{ row }">
+            <el-button type="primary" link @click="openEditDialog(row)">编辑</el-button>
             <el-button type="primary" link @click="handleEntry(row)" v-if="row.status === 'PENDING_ENTRY'">入场</el-button>
             <el-button type="warning" link @click="openTransferDialog(row)" v-if="row.status === 'ON_DUTY'">调配</el-button>
             <el-button type="danger" link @click="handleExit(row)" v-if="row.status === 'ON_DUTY'">离场</el-button>
+            <el-button type="danger" link @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -57,7 +81,7 @@
       </div>
     </el-card>
     
-    <el-dialog v-model="showDialog" title="添加外包人员" width="700px">
+    <el-dialog v-model="showDialog" :title="isEdit ? '编辑人员' : '添加外包人员'" width="700px">
       <el-form :model="form" label-width="100px">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -157,11 +181,17 @@ const router = useRouter()
 const loading = ref(false)
 const showDialog = ref(false)
 const showTransferDialog = ref(false)
+const isEdit = ref(false)
+const editId = ref(null)
 const currentPage = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
 const transferPersonnelId = ref(null)
 const transferProjectId = ref(null)
+
+const searchName = ref('')
+const searchStatus = ref('')
+const searchProjectId = ref(null)
 
 const personnelList = ref([])
 const suppliers = ref([])
@@ -204,10 +234,33 @@ const getProjectName = (projectId) => {
   return project ? project.projectName : '-'
 }
 
+const isExpiringSoon = (date) => {
+  if (!date) return false
+  const days = (new Date(date) - new Date()) / (1000 * 60 * 60 * 24)
+  return days > 0 && days <= 30
+}
+
+const handleSearch = () => {
+  currentPage.value = 1
+  fetchData()
+}
+
+const handleReset = () => {
+  searchName.value = ''
+  searchStatus.value = ''
+  searchProjectId.value = null
+  currentPage.value = 1
+  fetchData()
+}
+
 const fetchData = async () => {
   loading.value = true
   try {
-    const res = await request.get('/personnel', { params: { pageNum: currentPage.value, pageSize: pageSize.value } })
+    const params = { pageNum: currentPage.value, pageSize: pageSize.value }
+    if (searchName.value) params.name = searchName.value
+    if (searchStatus.value) params.status = searchStatus.value
+    if (searchProjectId.value) params.projectId = searchProjectId.value
+    const res = await request.get('/personnel', { params })
     if (res.code === 200) {
       personnelList.value = res.data.records
       total.value = res.data.total
@@ -242,6 +295,8 @@ const fetchProjects = async () => {
 }
 
 const openAddDialog = () => {
+  isEdit.value = false
+  editId.value = null
   Object.assign(form, {
     name: '',
     idCard: '',
@@ -257,22 +312,54 @@ const openAddDialog = () => {
   showDialog.value = true
 }
 
+const openEditDialog = async (row) => {
+  isEdit.value = true
+  editId.value = row.id
+  try {
+    const res = await request.get(`/personnel/${row.id}`)
+    if (res.code === 200) {
+      Object.assign(form, res.data)
+      showDialog.value = true
+    }
+  } catch (e) {
+    ElMessage.error('获取人员信息失败')
+  }
+}
+
 const handleSubmit = async () => {
   if (!form.name || !form.supplierId || !form.positionName) {
     ElMessage.warning('请填写必填项')
     return
   }
   try {
-    const res = await request.post('/personnel', form)
+    let res
+    if (isEdit.value) {
+      res = await request.put(`/personnel/${editId.value}`, form)
+    } else {
+      res = await request.post('/personnel', form)
+    }
     if (res.code === 200) {
-      ElMessage.success('添加成功')
+      ElMessage.success(isEdit.value ? '编辑成功' : '添加成功')
       showDialog.value = false
       fetchData()
     } else {
-      ElMessage.error(res.message || '添加失败')
+      ElMessage.error(res.message || '操作失败')
     }
   } catch (e) {
-    ElMessage.error('添加失败')
+    ElMessage.error('操作失败')
+  }
+}
+
+const handleDelete = async (row) => {
+  try {
+    await ElMessageBox.confirm('确认删除该人员？删除后无法恢复', '提示', { type: 'warning' })
+    const res = await request.delete(`/personnel/${row.id}`)
+    if (res.code === 200) {
+      ElMessage.success('删除成功')
+      fetchData()
+    }
+  } catch (e) {
+    if (e !== 'cancel') ElMessage.error('删除失败')
   }
 }
 
@@ -325,6 +412,13 @@ const handleTransfer = async () => {
   }
 }
 
+const handleExport = () => {
+  const params = new URLSearchParams()
+  if (searchName.value) params.append('name', searchName.value)
+  if (searchStatus.value) params.append('status', searchStatus.value)
+  window.open(`http://localhost:8080/api/personnel/export?${params.toString()}`, '_blank')
+}
+
 onMounted(() => {
   fetchData()
   fetchSuppliers()
@@ -351,9 +445,21 @@ onMounted(() => {
   font-size: 14px;
 }
 
+.search-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
 .pagination {
   margin-top: 20px;
   display: flex;
   justify-content: flex-end;
+}
+
+.text-danger {
+  color: #f56c6c;
+  font-weight: 500;
 }
 </style>

@@ -24,12 +24,16 @@ public class HrWorkHoursController {
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(required = false) Long personnelId,
+            @RequestParam(required = false) Long projectId,
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate) {
         Page<HrWorkHours> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<HrWorkHours> wrapper = new LambdaQueryWrapper<>();
         if (personnelId != null) {
             wrapper.eq(HrWorkHours::getPersonnelId, personnelId);
+        }
+        if (projectId != null) {
+            wrapper.eq(HrWorkHours::getProjectId, projectId);
         }
         if (startDate != null) {
             wrapper.ge(HrWorkHours::getWorkDate, startDate);

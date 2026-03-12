@@ -1,0 +1,125 @@
+{
+  "page": "Settlements.vue",
+  "path": "/settlements",
+  "description": "结算管理页面，管理外包费用结算与付款流程",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "结算列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/settlements",
+      "description": "展示结算列表，包含账单编号、供应商、项目、结算周期、金额、状态",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "生成月度账单",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/settlements/generate",
+      "description": "选择年月生成结算账单",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "账单详情查看",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "弹窗查看账单详细信息",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "HR确认",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/settlements/{id}/hr-confirm",
+      "description": "HR确认账单",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "项目经理确认",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/settlements/{id}/pm-confirm",
+      "description": "项目经理确认账单",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "财务确认",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/settlements/{id}/finance-confirm",
+      "description": "财务确认账单",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "供应商确认",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/settlements/{id}/supplier-confirm",
+      "description": "供应商确认账单",
+      "notes": ""
+    },
+    {
+      "id": "F008",
+      "name": "付款操作",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/settlements/{id}/pay",
+      "description": "确认付款",
+      "notes": ""
+    },
+    {
+      "id": "F009",
+      "name": "状态流转展示",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "待确认→HR已确认→PM已确认→财务已确认→供应商已确认→已付款",
+      "notes": "根据状态显示对应操作按钮"
+    },
+    {
+      "id": "F010",
+      "name": "分页功能",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/settlements?pageNum=1&pageSize=10",
+      "description": "列表分页",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加结算单导出功能",
+    "可增加结算单打印功能",
+    "可增加扣款明细编辑功能"
+  ]
+}

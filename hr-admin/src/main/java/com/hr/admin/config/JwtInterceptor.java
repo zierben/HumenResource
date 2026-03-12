@@ -28,7 +28,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         }
         
-        if ("/api/auth/login".equals(uri) || "/api/auth/logout".equals(uri) || "/api/auth/reset-admin".equals(uri)) {
+        if ("/api/auth/login".equals(uri) || "/api/auth/logout".equals(uri) || "/api/auth/reset-admin".equals(uri) || "/api/auth/reset-all".equals(uri) || "/api/auth/init-admin".equals(uri)) {
             log.info("Skipping auth for excluded path: {}", uri);
             return true;
         }

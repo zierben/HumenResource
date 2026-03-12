@@ -1,0 +1,59 @@
+{
+  "page": "Logs.vue",
+  "path": "/logs",
+  "description": "操作日志页面，查询系统操作记录",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "日志列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/logs",
+      "description": "展示日志列表，包含操作用户、模块、操作、目标类型、目标ID、详情、IP、时间",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "分页功能",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/logs?pageNum=1&pageSize=10",
+      "description": "列表分页",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "操作类型标签",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "新增/修改/删除/查询/登录/登出以不同颜色展示",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "详情溢出提示",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "详情字段超长时显示省略号，悬停可查看完整内容",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加日志筛选功能（按模块、用户、时间）",
+    "可增加日志搜索功能",
+    "可增加日志导出功能"
+  ]
+}

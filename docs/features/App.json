@@ -1,0 +1,137 @@
+{
+  "page": "App.vue",
+  "path": "/",
+  "description": "主框架布局，包含侧边栏导航、顶部栏、内容区域",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 95,
+  "features": [
+    {
+      "id": "F001",
+      "name": "侧边栏导航",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "多级菜单导航，支持收起/展开",
+      "notes": "包含业务管理、财务管理、人力运营、工作流程、系统设置五大模块"
+    },
+    {
+      "id": "F002",
+      "name": "顶部栏",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "面包屑导航、全局搜索、全屏、消息、设置、用户信息",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "路由视图",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "router-view带页面过渡动画",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "个人中心抽屉",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "部分实现",
+      "api": "/users/profile",
+      "description": "显示用户信息、修改密码、编辑资料",
+      "notes": "修改密码和编辑资料功能仅UI"
+    },
+    {
+      "id": "F005",
+      "name": "系统设置抽屉",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "主题切换、界面设置",
+      "notes": "主题配置保存在前端，未持久化"
+    },
+    {
+      "id": "F006",
+      "name": "登录状态检测",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "通过Pinia store判断登录状态",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "管理员权限控制",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "系统设置菜单仅管理员可见",
+      "notes": ""
+    },
+    {
+      "id": "F008",
+      "name": "全局搜索",
+      "category": "便捷功能",
+      "status": "UI_ONLY",
+      "frontend": "仅UI",
+      "backend": "未实现",
+      "api": "/search",
+      "description": "搜索功能、人员、项目",
+      "notes": "仅弹出提示，未实现真实搜索"
+    },
+    {
+      "id": "F009",
+      "name": "全屏切换",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": null,
+      "description": "浏览器全屏模式切换",
+      "notes": ""
+    },
+    {
+      "id": "F010",
+      "name": "消息计数显示",
+      "category": "业务功能",
+      "status": "STATIC_DATA",
+      "frontend": "完成",
+      "backend": "未实现",
+      "api": "/messages/count",
+      "description": "顶部消息图标显示未读数量",
+      "notes": "当前为硬编码值5"
+    },
+    {
+      "id": "F011",
+      "name": "退出登录",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "清除登录状态并跳转登录页",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "全局搜索功能需要对接后端API",
+    "消息计数需要实时获取",
+    "主题设置可考虑持久化到用户配置",
+    "个人中心修改密码功能需要完善"
+  ]
+}

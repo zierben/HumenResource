@@ -1,5 +1,6 @@
 package com.hr.admin.controller;
 
+import com.hr.admin.annotation.OperationLog;
 import com.hr.admin.dto.LoginDTO;
 import com.hr.admin.dto.LoginVO;
 import com.hr.admin.dto.Result;
@@ -10,6 +11,7 @@ import com.hr.admin.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,6 +24,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     
     @PostMapping("/login")
+    @OperationLog(module = "系统管理", action = "登录", targetType = "用户")
     public Result<LoginVO> login(@RequestBody LoginDTO loginDTO) {
         try {
             return Result.success(authService.login(loginDTO));
@@ -31,6 +34,7 @@ public class AuthController {
     }
     
     @PostMapping("/logout")
+    @OperationLog(module = "系统管理", action = "登出", targetType = "用户")
     public Result<Void> logout() {
         return Result.success();
     }
@@ -48,14 +52,44 @@ public class AuthController {
         return Result.success(authService.getCurrentUser(username));
     }
     
-    @PostMapping("/reset-admin")
-    public Result<Void> resetAdminPassword() {
-        SysUser user = sysUserService.getByUsername("admin");
-        if (user != null) {
-            user.setPassword(passwordEncoder.encode("123456"));
+    @PostMapping("/reset-all")
+    public Result<String> resetAllPasswords() {
+        String encoded = passwordEncoder.encode("admin123");
+        for (SysUser user : sysUserService.list()) {
+            user.setPassword(encoded);
             sysUserService.updateById(user);
-            return Result.success();
         }
-        return Result.error("用户不存在");
+        return Result.success("所有用户密码已重置为admin123");
+    }
+    
+    @PostMapping("/init-admin")
+    public Result<String> initAdmin() {
+        String encoded = passwordEncoder.encode("admin123");
+        
+        SysUser existing = sysUserService.getByUsername("admin");
+        if (existing == null) {
+            SysUser admin = new SysUser();
+            admin.setUsername("admin");
+            admin.setPassword(encoded);
+            admin.setRealName("系统管理员");
+            admin.setRole("GM");
+            admin.setStatus(1);
+            admin.setLevel(1);
+            admin.setCreateTime(LocalDateTime.now());
+            admin.setUpdateTime(LocalDateTime.now());
+            sysUserService.save(admin);
+        } else {
+            existing.setPassword(encoded);
+            existing.setRole("GM");
+            sysUserService.updateById(existing);
+        }
+        
+        SysUser hrExisting = sysUserService.getByUsername("hr001");
+        if (hrExisting != null) {
+            hrExisting.setPassword(encoded);
+            sysUserService.updateById(hrExisting);
+        }
+        
+        return Result.success("账号初始化完成: admin/admin123, hr001/admin123");
     }
 }

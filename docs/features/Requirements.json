@@ -1,0 +1,125 @@
+{
+  "page": "Requirements.vue",
+  "path": "/requirements",
+  "description": "需求管理页面，管理外包人力需求申请与审批",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "需求列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/requirements",
+      "description": "展示需求列表，包含编号、名称、人数、单价、预算、状态、审批进度",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "新建需求",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/requirements",
+      "description": "弹窗表单提交新需求",
+      "notes": "包含项目、岗位、人数、技能、预算等多字段"
+    },
+    {
+      "id": "F003",
+      "name": "需求详情查看",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "弹窗查看需求详细信息",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "提交审批",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/requirements/{id}/submit",
+      "description": "将草稿需求提交到工作流审批",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "审批通过",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/requirements/{id}/approve",
+      "description": "审批通过需求",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "审批驳回",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/requirements/{id}/approve",
+      "description": "驳回需求并填写驳回原因",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "状态流转",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "草稿→部门待审→HR待审→财务待审→已通过/已驳回",
+      "notes": ""
+    },
+    {
+      "id": "F008",
+      "name": "工作流状态展示",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "显示工作流审批状态",
+      "notes": ""
+    },
+    {
+      "id": "F009",
+      "name": "项目选择",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/projects",
+      "description": "从项目列表中选择所属项目",
+      "notes": ""
+    },
+    {
+      "id": "F010",
+      "name": "分页功能",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/requirements?pageNum=1&pageSize=10",
+      "description": "列表分页",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加需求复制功能",
+    "可增加需求模板功能",
+    "可增加批量审批功能"
+  ]
+}

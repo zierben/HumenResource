@@ -1,0 +1,92 @@
+{
+  "page": "Users.vue",
+  "path": "/settings/users",
+  "description": "用户管理页面，管理系统用户账号",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "用户列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/users",
+      "description": "展示用户列表，包含用户名、姓名、角色、状态、创建时间",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "添加用户",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/users",
+      "description": "弹窗表单添加新用户",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "编辑用户",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "PUT /api/users/{id}",
+      "description": "弹窗表单编辑已有用户",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "删除用户",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "DELETE /api/users/{id}",
+      "description": "二次确认后删除用户",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "重置密码",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/users/{id}/reset-password",
+      "description": "弹窗重置用户密码",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "角色管理",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "管理员/HR两种角色",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "状态管理",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "启用/禁用用户状态",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加用户搜索功能",
+    "可增加角色权限细粒度配置",
+    "可增加用户批量导入功能"
+  ]
+}

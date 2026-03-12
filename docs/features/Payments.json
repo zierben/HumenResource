@@ -1,0 +1,114 @@
+{
+  "page": "Payments.vue",
+  "path": "/payments",
+  "description": "付款管理页面，管理供应商付款记录",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 100,
+  "features": [
+    {
+      "id": "F001",
+      "name": "付款列表展示",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/payments",
+      "description": "展示付款列表，包含编号、供应商、结算单号、金额、日期、方式、凭证、状态、备注",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "添加付款",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "POST /api/payments",
+      "description": "弹窗表单添加新付款记录",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "编辑付款",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "PUT /api/payments/{id}",
+      "description": "弹窗表单编辑已有付款记录",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "删除付款",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "DELETE /api/payments/{id}",
+      "description": "二次确认后删除付款记录",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "付款状态管理",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "待付款/已付款两种状态",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "付款方式选择",
+      "category": "业务功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "银行转账/现金/支票/其他",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "凭证查看",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": null,
+      "description": "点击查看付款凭证",
+      "notes": "新窗口打开凭证链接"
+    },
+    {
+      "id": "F008",
+      "name": "供应商选择",
+      "category": "便捷功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/suppliers",
+      "description": "从供应商列表中选择付款对象",
+      "notes": "支持搜索筛选"
+    },
+    {
+      "id": "F009",
+      "name": "分页功能",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "GET /api/payments?pageNum=1&pageSize=10",
+      "description": "列表分页",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "可增加凭证上传功能",
+    "可增加与结算单的自动关联",
+    "可增加付款审批流程"
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "page": "Login.vue",
+  "path": "/login",
+  "description": "登录页面",
+  "lastUpdate": "2026-03-12",
+  "completionRate": 35,
+  "features": [
+    {
+      "id": "F001",
+      "name": "密码登录",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "/api/auth/login",
+      "description": "用户名+密码登录，表单验证，调用后端API",
+      "notes": ""
+    },
+    {
+      "id": "F002",
+      "name": "JWT Token处理",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "-",
+      "description": "Token存储到localStorage，Pinia状态管理",
+      "notes": ""
+    },
+    {
+      "id": "F003",
+      "name": "登录状态检查",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "/api/auth/current",
+      "description": "路由守卫检查登录状态",
+      "notes": ""
+    },
+    {
+      "id": "F004",
+      "name": "表单验证",
+      "category": "核心功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "完成",
+      "api": "-",
+      "description": "用户名/密码必填校验",
+      "notes": ""
+    },
+    {
+      "id": "F005",
+      "name": "动态背景动画",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": "-",
+      "description": "CSS动画浮动圆形背景",
+      "notes": ""
+    },
+    {
+      "id": "F006",
+      "name": "品牌展示区",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": "-",
+      "description": "左侧Logo、标题、功能特性展示",
+      "notes": ""
+    },
+    {
+      "id": "F007",
+      "name": "双因子认证(MFA)",
+      "category": "安全功能",
+      "status": "UI_ONLY",
+      "frontend": "仅UI",
+      "backend": "未实现",
+      "api": "无",
+      "description": "Tab切换展示，二维码区域占位，验证码输入",
+      "notes": "需要后端实现TOTP算法、密钥生成、验证逻辑",
+      "todo": [
+        "后端生成MFA密钥并绑定用户",
+        "生成二维码供扫描",
+        "验证6位动态码",
+        "前端对接验证API"
+      ]
+    },
+    {
+      "id": "F008",
+      "name": "企业微信登录",
+      "category": "第三方登录",
+      "status": "UI_ONLY",
+      "frontend": "仅图标",
+      "backend": "未实现",
+      "api": "无",
+      "description": "社交登录图标展示",
+      "notes": "需要申请企业微信应用，配置回调URL",
+      "todo": [
+        "申请企业微信应用",
+        "后端OAuth2对接",
+        "用户绑定逻辑"
+      ]
+    },
+    {
+      "id": "F009",
+      "name": "钉钉登录",
+      "category": "第三方登录",
+      "status": "UI_ONLY",
+      "frontend": "仅图标",
+      "backend": "未实现",
+      "api": "无",
+      "description": "社交登录图标展示",
+      "notes": "需要申请钉钉应用",
+      "todo": [
+        "申请钉钉应用",
+        "后端OAuth2对接",
+        "用户绑定逻辑"
+      ]
+    },
+    {
+      "id": "F010",
+      "name": "LDAP登录",
+      "category": "第三方登录",
+      "status": "UI_ONLY",
+      "frontend": "仅图标",
+      "backend": "未实现",
+      "api": "无",
+      "description": "社交登录图标展示",
+      "notes": "需要配置LDAP服务器连接",
+      "todo": [
+        "配置LDAP连接参数",
+        "用户认证逻辑",
+        "用户信息同步"
+      ]
+    },
+    {
+      "id": "F011",
+      "name": "记住我",
+      "category": "便捷功能",
+      "status": "UI_ONLY",
+      "frontend": "仅Checkbox",
+      "backend": "未实现",
+      "api": "无",
+      "description": "复选框展示，无实际逻辑",
+      "notes": "需要实现长效Token或本地存储用户名",
+      "todo": [
+        "前端存储用户名到localStorage",
+        "页面加载时自动填充",
+        "或后端返回长效Token"
+      ]
+    },
+    {
+      "id": "F012",
+      "name": "忘记密码",
+      "category": "便捷功能",
+      "status": "UI_ONLY",
+      "frontend": "仅按钮",
+      "backend": "未实现",
+      "api": "无",
+      "description": "按钮展示，无实际功能",
+      "notes": "需要实现密码重置流程",
+      "todo": [
+        "创建忘记密码页面",
+        "邮箱验证逻辑",
+        "重置密码API"
+      ]
+    },
+    {
+      "id": "F013",
+      "name": "测试账号提示",
+      "category": "辅助功能",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": "-",
+      "description": "展示测试账号信息（生产环境应隐藏）",
+      "notes": "生产环境建议移除"
+    },
+    {
+      "id": "F014",
+      "name": "响应式布局",
+      "category": "UI效果",
+      "status": "DONE",
+      "frontend": "完成",
+      "backend": "无",
+      "api": "-",
+      "description": "移动端适配，隐藏品牌区",
+      "notes": ""
+    }
+  ],
+  "bugs": [],
+  "improvements": [
+    "验证码登录方式（短信验证码）",
+    "登录失败次数限制（防暴力破解）",
+    "图形验证码（防机器人）",
+    "登录日志记录"
+  ]
+}

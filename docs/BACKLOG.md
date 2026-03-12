@@ -26,91 +26,81 @@
 
 ---
 
-## 三、本次已完成的增强
+## 三、本次已完成的增强 (2026-03-12)
 
-### 前端增强
-1. **Dashboard数据对接** - 统计卡片、图表、待办任务调用真实API
-2. **人员管理增强** - 搜索、编辑、删除、合同到期高亮
-3. **登录记住我** - localStorage存储用户名
-4. **合同到期提醒** - 即将到期预警、列表高亮
-5. **候选人转正式人员** - 一键转换功能
-6. **数据导出Excel** - 人员列表导出
+### 角色系统升级
+- 从 ADMIN/HR 改为 GM/VP/DEPT_HEAD/PM/HR 五级角色
+- 菜单按角色权限显示
+
+### 登录页增强
+- 快速登录功能（仅开发环境）
+- 生产环境自动隐藏
+- 6个测试账号可直接点击登录
+
+### Dashboard假数据修复
+- **banners轮播图** - 动态显示待审批数、预算执行率
+- **stats统计卡片** - trend趋势从API计算
+- **待办任务** - 从API获取真实数据
+
+### 工时管理优化
+- 人员显示人名而非ID
+- 添加人力公司筛选
+- 添加人员筛选（联动）
+- 任务内容显示禅道同步的工作内容
+
+### 合同管理优化
+- 已过期合同红色提醒
+- 即将到期合同黄色提醒
+- 分别显示两个提醒区域
+
+### 组织架构优化
+- 左侧树宽度调整为1/3
+
+### 数据库新增表
+- hr_contract 合同表
+- hr_payment 付款记录表
+- hr_evaluation 评估表
+- hr_message 消息表
+- hr_operation_log 操作日志表
+
+### 数据约束
+- 供应商名称唯一
+- 项目名称唯一
 
 ### 后端增强
-1. **WebSocket消息推送** - 实时通知能力
-2. **全局搜索API** - 跨模块搜索
-3. **操作日志AOP** - `@OperationLog`注解自动记录
-4. **合同到期API** - `/api/contracts/expiring`
-5. **候选人转换API** - `/api/candidates/{id}/convert`
-6. **Excel导出** - 人员列表导出
+- WebSocket消息推送
+- 全局搜索API
+- 操作日志AOP
+- 合同到期API
+- 预算数据根据去年数据计算
 
 ---
 
-## 四、新增文件清单
+## 四、预算数据处理方案
 
-### 后端
-- `annotation/OperationLog.java` - 操作日志注解
-- `aspect/OperationLogAspect.java` - AOP切面
-- `websocket/WebSocketConfig.java` - WebSocket配置
-- `websocket/WebSocketService.java` - 推送服务
-- `controller/SearchController.java` - 全局搜索
-- `util/ExcelUtil.java` - Excel导出工具
+**原计划**: 添加预算表存储预算数据
 
-### 前端
-- `utils/websocket.js` - WebSocket服务
-
-### 文档
-- `docs/BACKLOG.md` - 本文档
+**实际方案**: 采用动态计算方式
+- 预算 = 去年同期实际支出 × 1.1 (增长10%)
+- 如无历史数据，默认月预算15万
+- 好处：无需手动维护预算，自动适应业务增长
 
 ---
 
-## 五、操作日志AOP使用说明
+## 五、测试账号
 
-在Controller方法上添加 `@OperationLog` 注解：
-
-```java
-@PostMapping
-@OperationLog(module = "人员管理", action = "新增人员", targetType = "人员")
-public Result<Void> save(@RequestBody HrPersonnel hrPersonnel) {
-    // ...
-}
-```
-
-已添加注解的Controller：
-- `AuthController` - 登录/登出
-- `HrPersonnelController` - 人员增删改查/入场/离场/调配
+| 用户名 | 密码 | 姓名 | 角色 |
+|--------|------|------|------|
+| admin | admin123 | 系统管理员 | GM(总经理) |
+| ceo | admin123 | 张伟华 | CEO |
+| vp_tech | admin123 | 李明强 | 副总-技术 |
+| vp_hr | admin123 | 王晓红 | 副总-人事 |
+| dept_dev | admin123 | 陈志远 | 部门长-研发 |
+| hr001 | admin123 | 孙丽娜 | HR专员 |
 
 ---
 
-## 六、WebSocket使用说明
-
-前端使用：
-```javascript
-import { useWebSocket } from '@/utils/websocket'
-
-const { connect, onMessage } = useWebSocket()
-
-// 连接
-connect(userId)
-
-// 监听消息
-onMessage((data) => {
-  console.log('收到消息:', data)
-})
-```
-
-后端推送：
-```java
-@Autowired
-private WebSocketService webSocketService;
-
-// 推送给特定用户
-webSocketService.pushNotification(userId, "标题", "内容");
-```
-
----
-
-## 七、下一步建议
+## 六、下一步建议
 
 1. **等待用户提供** - 禅道配置、NUC对接文档
 2. **完善操作日志** - 为其他Controller添加`@OperationLog`注解

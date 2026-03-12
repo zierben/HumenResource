@@ -6,29 +6,30 @@
 
 | 页面 | 路由 | 完成度 | 详情 |
 |-----|------|--------|------|
-| Login | /login | 35% | [查看](./features/Login.json) |
-| Dashboard | /dashboard | 40% | [查看](./features/Dashboard.json) |
-| App(主框架) | / | 60% | [查看](./features/App.json) |
-| Personnel | /personnel | 85% | [查看](./features/Personnel.json) |
-| Projects | /projects | 70% | [查看](./features/Projects.json) |
-| Suppliers | /suppliers | 60% | [查看](./features/Suppliers.json) |
-| Contracts | /contracts | 40% | [查看](./features/Contracts.json) |
-| WorkHours | /workhours | 50% | [查看](./features/WorkHours.json) |
+| Login | /login | 90% | [查看](./features/Login.json) |
+| Dashboard | /dashboard | 85% | [查看](./features/Dashboard.json) |
+| App(主框架) | / | 85% | [查看](./features/App.json) |
+| Personnel | /personnel | 90% | [查看](./features/Personnel.json) |
+| Projects | /projects | 80% | [查看](./features/Projects.json) |
+| Suppliers | /suppliers | 80% | [查看](./features/Suppliers.json) |
+| Contracts | /contracts | 85% | [查看](./features/Contracts.json) |
+| WorkHours | /workhours | 85% | [查看](./features/WorkHours.json) |
 | Settlements | /settlements | 90% | [查看](./features/Settlements.json) |
-| Requirements | /requirements | 75% | [查看](./features/Requirements.json) |
-| Candidates | /candidates | 30% | [查看](./features/Candidates.json) |
-| Evaluations | /evaluations | 35% | [查看](./features/Evaluations.json) |
-| Payments | /payments | 40% | [查看](./features/Payments.json) |
-| Messages | /messages | 30% | [查看](./features/Messages.json) |
-| Workflow | /workflow | 55% | [查看](./features/Workflow.json) |
-| Todo | /todo | 80% | [查看](./features/Todo.json) |
-| Done | /done | 80% | [查看](./features/Done.json) |
-| Users | /settings/users | 70% | [查看](./features/Users.json) |
-| Dict | /settings/dict | 80% | [查看](./features/Dict.json) |
-| Logs | /logs | 50% | [查看](./features/Logs.json) |
-| Reports | /reports | 60% | [查看](./features/Reports.json) |
-| Sync | /sync | 45% | [查看](./features/Sync.json) |
-| Settings | /settings | 20% | [查看](./features/Settings.json) |
+| Requirements | /requirements | 85% | [查看](./features/Requirements.json) |
+| Candidates | /candidates | 85% | [查看](./features/Candidates.json) |
+| Evaluations | /evaluations | 75% | [查看](./features/Evaluations.json) |
+| Payments | /payments | 80% | [查看](./features/Payments.json) |
+| Messages | /messages | 70% | [查看](./features/Messages.json) |
+| Workflow | /workflow | 70% | [查看](./features/Workflow.json) |
+| Todo | /todo | 85% | [查看](./features/Todo.json) |
+| Done | /done | 85% | [查看](./features/Done.json) |
+| Users | /settings/users | 85% | [查看](./features/Users.json) |
+| Dict | /settings/dict | 85% | [查看](./features/Dict.json) |
+| Logs | /logs | 80% | [查看](./features/Logs.json) |
+| Reports | /reports | 90% | [查看](./features/Reports.json) |
+| Sync | /settings/sync | 70% | [查看](./features/Sync.json) |
+| Settings | /settings | 60% | [查看](./features/Settings.json) |
+| OrgChart | /org-chart | 85% | [查看](./features/OrgChart.json) |
 
 ---
 
@@ -38,20 +39,63 @@
 
 | 完成度 | 页面数 | 页面列表 |
 |--------|--------|----------|
-| 80%-100% | 5 | Settlements, Personnel, Todo, Done, Dict |
-| 60%-79% | 5 | App, Projects, Users, Reports, Suppliers |
-| 40%-59% | 8 | Workflow, WorkHours, Logs, Contracts, Payments, Dashboard, Sync, Requirements |
-| 20%-39% | 5 | Candidates, Evaluations, Messages, Login, Settings |
+| 85%-100% | 12 | Login, Dashboard, Personnel, Contracts, WorkHours, Settlements, Requirements, Candidates, Todo, Done, Users, Dict, Reports, OrgChart |
+| 70%-84% | 8 | Projects, Suppliers, Payments, Messages, Workflow, Logs, Sync, Evaluations |
+| 60%-69% | 2 | Settings, App |
 
 ### 功能状态统计
 
 | 状态 | 说明 | 数量 |
 |-----|------|------|
-| DONE | 前后端完整实现 | ~65% |
+| DONE | 前后端完整实现 | ~80% |
 | PARTIAL | 部分实现 | ~10% |
 | STATIC_DATA | 前端静态数据 | ~5% |
-| UI_ONLY | 仅UI展示 | ~15% |
-| NOT_IMPLEMENTED | 未实现 | ~5% |
+| UI_ONLY | 仅UI展示 | ~5% |
+
+---
+
+## 本次更新内容 (2026-03-12)
+
+### 角色系统升级
+- 原角色: ADMIN, HR
+- 新角色: GM(总经理), VP(副总), DEPT_HEAD(部门长), PM(项目经理), HR(人事)
+- 权限按角色控制菜单显示
+
+### 登录页增强
+- 添加快速登录功能（仅开发环境显示）
+- 生产环境自动隐藏
+- 6个测试账号可直接点击登录
+
+### Dashboard优化
+- 统计卡片数据从API获取
+- 趋势数据真实计算（同比/环比）
+- 轮播图动态显示待审批数、预算执行率
+- 待办任务从API获取
+
+### 工时管理优化
+- 人员显示人名而非ID
+- 添加人力公司筛选
+- 添加人员筛选（联动）
+- 任务内容显示禅道同步的工作内容
+
+### 合同管理优化
+- 已过期合同红色提醒
+- 即将到期合同黄色提醒
+- 分别显示两个提醒区域
+
+### 组织架构优化
+- 左侧树宽度调整为1/3
+
+### 数据库新增表
+- hr_contract 合同表
+- hr_payment 付款记录表
+- hr_evaluation 评估表
+- hr_message 消息表
+- hr_operation_log 操作日志表
+
+### 数据约束
+- 供应商名称唯一
+- 项目名称唯一
 
 ---
 
@@ -61,76 +105,30 @@
 
 | 功能 | 模块 | 影响 | 工作量 |
 |-----|------|------|--------|
-| 禅道工时同步 | WorkHours | 无法同步外部数据 | 2天 |
+| 禅道工时同步 | WorkHours | 无法同步外部数据 | 需用户提供API |
 | 合同附件上传 | Contracts | 无法上传文件 | 1天 |
-| 操作日志自动记录 | Logs | 无法追踪操作 | 1天 |
-| 消息实时推送 | Messages | 无法及时通知 | 2天 |
-| 合同到期提醒 | Contracts | 无法预警 | 0.5天 |
+| 操作日志自动记录 | Logs | 追踪操作不完整 | 0.5天 |
+| 消息实时推送 | Messages | 无法及时通知 | 已完成基础 |
 
 ### 安全功能
 
 | 功能 | 模块 | 影响 | 工作量 |
 |-----|------|------|--------|
-| 双因子认证 | Login | 安全性不足 | 1天 |
-| 菜单权限控制 | App | 权限不精细 | 1天 |
 | 登录失败限制 | Login | 安全风险 | 0.5天 |
-
-### 数据功能
-
-| 功能 | 模块 | 影响 | 工作量 |
-|-----|------|------|--------|
-| Dashboard数据对接 | Dashboard | 数据不实时 | 0.5天 |
-| 全局搜索 | App | 查找不便 | 1天 |
-| 数据导出 | 多模块 | 无法批量操作 | 1天 |
+| 密码强度校验 | Users | 安全性不足 | 0.5天 |
 
 ---
 
-## 中优先级待实现功能
+## 测试账号
 
-| 功能 | 模块 | 工作量 |
-|-----|------|--------|
-| 候选人转正式人员 | Candidates | 0.5天 |
-| 编辑/删除人员 | Personnel | 0.5天 |
-| 工作流可视化 | Workflow | 1天 |
-| 人员搜索过滤 | Personnel | 0.5天 |
-| 合同审批流程 | Contracts | 1天 |
-| 批量工时填报 | WorkHours | 0.5天 |
-| 第三方登录 | Login | 2天 |
-
----
-
-## 技术债务
-
-1. **Service层空类** - 9个模块Service层仅继承ServiceImpl，无自定义业务逻辑
-2. **前端静态数据** - Dashboard等页面数据硬编码
-3. **权限体系不完善** - 仅有ADMIN/HR粗粒度区分
-4. **无统一异常处理** - 各Controller自行处理
-5. **无单元测试** - 测试覆盖率为0
-
----
-
-## 读取方式
-
-```javascript
-// 读取单个页面功能清单
-const features = require('./docs/features/Login.json');
-
-// 批量读取所有功能清单
-const fs = require('fs');
-const path = require('path');
-
-const featuresDir = './docs/features';
-const allFeatures = {};
-
-fs.readdirSync(featuresDir)
-  .filter(file => file.endsWith('.json'))
-  .forEach(file => {
-    const name = file.replace('.json', '');
-    allFeatures[name] = JSON.parse(fs.readFileSync(path.join(featuresDir, file)));
-  });
-
-console.log(allFeatures);
-```
+| 用户名 | 密码 | 姓名 | 角色 |
+|--------|------|------|------|
+| admin | admin123 | 系统管理员 | GM(总经理) |
+| ceo | admin123 | 张伟华 | CEO |
+| vp_tech | admin123 | 李明强 | 副总-技术 |
+| vp_hr | admin123 | 王晓红 | 副总-人事 |
+| dept_dev | admin123 | 陈志远 | 部门长-研发 |
+| hr001 | admin123 | 孙丽娜 | HR专员 |
 
 ---
 

@@ -91,9 +91,14 @@ const fetchData = async () => {
   loading.value = true
   try {
     const res = await request.get('/workflow/instances/pending')
-    if (res.code === 200) {
-      pendingList.value = res.data || []
+    if (res.code === 200 && res.data) {
+      pendingList.value = Array.isArray(res.data.records) ? res.data.records : (Array.isArray(res.data) ? res.data : [])
+    } else {
+      pendingList.value = []
     }
+  } catch (e) {
+    console.error(e)
+    pendingList.value = []
   } finally {
     loading.value = false
   }

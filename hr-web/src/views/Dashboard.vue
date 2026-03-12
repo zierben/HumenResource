@@ -292,7 +292,7 @@ const fetchPersonnelBySupplier = async () => {
 const fetchPendingTasks = async () => {
   try {
     const res = await request.get('/workflow/instances/pending', { params: { pageNum: 1, pageSize: 5 } })
-    if (res.code === 200) {
+    if (res.code === 200 && res.data) {
       const typeMap = { 'REQUIREMENT': '需求审批', 'ENTRY': '入场审核', 'SETTLEMENT': '结算确认', 'EXIT': '离场确认' }
       pendingTasks.value = (res.data.records || []).map(item => ({
         id: item.id,
@@ -305,9 +305,12 @@ const fetchPendingTasks = async () => {
       }))
       const settlementAction = quickActions.value.find(a => a.path === '/settlements')
       if (settlementAction) settlementAction.count = pendingTasks.value.filter(t => t.businessType === 'SETTLEMENT').length
+    } else {
+      pendingTasks.value = []
     }
   } catch (e) {
     console.error('获取待办任务失败', e)
+    pendingTasks.value = []
   }
 }
 

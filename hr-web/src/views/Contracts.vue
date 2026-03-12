@@ -244,12 +244,17 @@ const fetchData = async () => {
   loading.value = true
   try {
     const res = await request.get('/contracts', { params: { pageNum: currentPage.value, pageSize: pageSize.value } })
-    if (res.code === 200) {
-      contractList.value = res.data.records
-      total.value = res.data.total
+    if (res.code === 200 && res.data) {
+      contractList.value = res.data.records || []
+      total.value = res.data.total || 0
+    } else {
+      contractList.value = []
+      total.value = 0
     }
   } catch (e) {
     console.error(e)
+    contractList.value = []
+    total.value = 0
   } finally {
     loading.value = false
   }
@@ -286,22 +291,28 @@ const fetchExpired = async () => {
 const fetchSuppliers = async () => {
   try {
     const res = await request.get('/suppliers', { params: { pageNum: 1, pageSize: 100 } })
-    if (res.code === 200) {
-      suppliers.value = res.data.records
+    if (res.code === 200 && res.data) {
+      suppliers.value = res.data.records || []
+    } else {
+      suppliers.value = []
     }
   } catch (e) {
     console.error(e)
+    suppliers.value = []
   }
 }
 
 const fetchPersonnel = async () => {
   try {
     const res = await request.get('/personnel', { params: { pageNum: 1, pageSize: 100 } })
-    if (res.code === 200) {
-      personnelList.value = res.data.records
+    if (res.code === 200 && res.data) {
+      personnelList.value = res.data.records || []
+    } else {
+      personnelList.value = []
     }
   } catch (e) {
     console.error(e)
+    personnelList.value = []
   }
 }
 

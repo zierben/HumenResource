@@ -84,9 +84,14 @@ const fetchData = async () => {
   loading.value = true
   try {
     const res = await request.get('/workflow/instances/done')
-    if (res.code === 200) {
-      doneList.value = res.data || []
+    if (res.code === 200 && res.data) {
+      doneList.value = Array.isArray(res.data.records) ? res.data.records : (Array.isArray(res.data) ? res.data : [])
+    } else {
+      doneList.value = []
     }
+  } catch (e) {
+    console.error(e)
+    doneList.value = []
   } finally {
     loading.value = false
   }

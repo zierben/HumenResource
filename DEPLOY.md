@@ -2,179 +2,458 @@
 
 ## 一、环境要求
 
-- Linux (CentOS 7+ / Ubuntu 18.04+)
-- Docker 20.10+
-- Docker Compose 2.0+
-- 内存: 4GB+
-- 磁盘: 20GB+
+- 操作系统: CentOS 7+ / Ubuntu 18.04+
+- Java: JDK 17+
+- Node.js: 18+ (用于前端构建)
+- MySQL: 8.0+
+- 内存: 最低2GB
+- 磁盘: 最低10GB
 
-## 二、一键部署
+## 二、一键部署脚本
+
+创建部署脚本 `deploy.sh`:
 
 ```bash
-# 1. 克隆代码
-git clone https://github.com/zierben/HumenResource.git
-cd HumenResource
+#!/bin/bash
 
-# 2. 执行部署脚本
-chmod +x deploy.sh
-./deploy.sh
+# HR外包人力管理系统 - 一键部署脚本
+# 使用方法: chmod +x deploy.sh && ./deploy.sh
 
-# 3. 访问系统
-# 前端: http://服务器IP
-# 后端: http://服务器IP:8080
+set -e
+
+echo "=========================================="
+echo "  HR外包人力管理系统 - 一键部署"
+echo "=========================================="
+
+# 配置变量
+DB_HOST="localhost"
+DB_PORT="3306"
+DB_USER="root"
+DB_PASS="your_password"
+DB_NAME="hr_system"
+
+SERVER_IP="your_server_ip"
+DEPLOY_DIR="/opt/hr-system"
+
+echo "[1/6] 安装依赖..."
+yum install -y java-17-openjdk java-17-openjdk-devel mysql-server nginx
+
+echo "[2/6] 创建部署目录..."
+mkdir -p $DEPLOY_DIR/{backend,frontend,logs}
+
+echo "[3/6] 上传文件..."
+# 后端
+scp hr-admin/target/hr-admin-1.0.0.jar root@$SERVER_IP:$DEPLOY_DIR/backend/
+# 前端
+scp -r hr-web/dist/* root@$SERVER_IP:$DEPLOY_DIR/frontend/
+# SQL
+scp hr-admin/src/main/resources/schema.sql root@$SERVER_IP:$DEPLOY_DIR/
+
+echo "[4/6] 初始化数据库..."
+mysql -h $DB_HOST -P $DB_PORT -u $DB_USER -p$DB_PASS -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
+mysql -h $DB_HOST -P $DB_PORT -u $DB_USER -p$DB_PASS $DB_NAME < $DEPLOY_DIR/schema.sql
+
+echo "[5/6] 配置后端服务..."
+cat > /etc/systemd/system/hr-backend.service << 'EOF'
+[Unit]
+Description=HR System Backend
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/hr-system/backend
+ExecStart=/usr/bin/java -Xms512m -Xmx1024m -jar hr-admin-1.0.0.jar
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+echo "[6/6] 配置Nginx..."
+cat > /etc/nginx/conf.d/hr-system.conf << 'EOF'
+upstream backend {
+    server 127.0.0.1:8080;
+}
+
+server {
+    listen 80;
+    server_name your_domain.com;
+
+    location / {
+        root /opt/hr-system/frontend;
+        index index.html;
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api {
+        proxy_pass http://backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+EOF
+
+echo "启动服务..."
+systemctl daemon-reload
+systemctl enable hr-backend
+systemctl start hr-backend
+systemctl restart nginx
+
+echo "=========================================="
+echo "  部署完成！"
+echo "=========================================="
+echo "访问地址: http://your_domain.com"
+echo "默认账号: admin / admin123"
+echo "=========================================="
 ```
 
-## 三、手动部署
+## 三、手动部署步骤
 
-### 3.1 安装Docker
+### 1. 安装依赖
 
 ```bash
-# CentOS
-yum install -y docker docker-compose
-systemctl start docker
-systemctl enable docker
+# CentOS/RHEL
+yum install -y java-17-openjdk java-17-openjdk-devel mysql-server nginx
 
-# Ubuntu
-apt update
-apt install -y docker.io docker-compose
-systemctl start docker
-systemctl enable docker
+# Ubuntu/Debian
+apt update && apt install -y openjdk-17-jdk mysql-server nginx
 ```
 
-### 3.2 构建并启动
+### 2. 准备数据库
 
 ```bash
-# 构建镜像
-docker-compose build
+# 启动MySQL
+systemctl start mysqld
+systemctl enable mysqld
+
+# 创建数据库和用户
+mysql -u root -p << 'EOF'
+CREATE DATABASE IF NOT EXISTS hr_system DEFAULT CHARACTER SET utf8mb4;
+CREATE USER 'hr_user'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON hr_system.* TO 'hr_user'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+
+# 导入初始数据
+mysql -u hr_user -p hr_system < schema.sql
+```
+
+### 3. 部署后端
+
+```bash
+# 创建目录
+mkdir -p /opt/hr-system/backend /opt/hr-system/logs
+
+# 上传jar包
+scp hr-admin/target/hr-admin-1.0.0.jar /opt/hr-system/backend/
+
+# 创建配置文件
+cat > /opt/hr-system/backend/application-prod.yml << 'EOF'
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/hr_system?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: hr_user
+    password: your_password
+
+jwt:
+  secret: your-very-long-secret-key-at-least-256-bits
+  expiration: 86400000
+
+logging:
+  file:
+    path: /opt/hr-system/logs
+EOF
+
+# 创建systemd服务
+cat > /etc/systemd/system/hr-backend.service << 'EOF'
+[Unit]
+Description=HR System Backend Service
+After=network.target mysqld.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/hr-system/backend
+ExecStart=/usr/bin/java -Xms512m -Xmx1024m -jar hr-admin-1.0.0.jar --spring.profiles.active=prod
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
 
 # 启动服务
+systemctl daemon-reload
+systemctl enable hr-backend
+systemctl start hr-backend
+```
+
+### 4. 部署前端
+
+```bash
+# 本地构建
+cd hr-web
+npm install
+npm run build
+
+# 上传到服务器
+mkdir -p /opt/hr-system/frontend
+scp -r dist/* /opt/hr-system/frontend/
+```
+
+### 5. 配置Nginx
+
+```bash
+cat > /etc/nginx/conf.d/hr-system.conf << 'EOF'
+upstream backend {
+    server 127.0.0.1:8080;
+}
+
+server {
+    listen 80;
+    server_name your-domain.com;
+
+    # 前端静态文件
+    location / {
+        root /opt/hr-system/frontend;
+        index index.html;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # API代理
+    location /api {
+        proxy_pass http://backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # WebSocket支持
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+    # 日志
+    access_log /var/log/nginx/hr-access.log;
+    error_log /var/log/nginx/hr-error.log;
+}
+EOF
+
+# 测试配置
+nginx -t
+
+# 重启Nginx
+systemctl restart nginx
+```
+
+## 四、Docker部署（推荐）
+
+### docker-compose.yml
+
+```yaml
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: hr-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: hr_system
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./hr-admin/src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    ports:
+      - "3306:3306"
+    networks:
+      - hr-network
+
+  backend:
+    build: ./hr-admin
+    container_name: hr-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/hr_system?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root123456
+      JWT_SECRET: your-very-long-secret-key-at-least-256-bits
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    networks:
+      - hr-network
+
+  frontend:
+    build: ./hr-web
+    container_name: hr-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - hr-network
+
+volumes:
+  mysql_data:
+
+networks:
+  hr-network:
+```
+
+### 后端Dockerfile (hr-admin/Dockerfile)
+
+```dockerfile
+FROM maven:3.8-openjdk-17 AS builder
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+COPY src ./src
+RUN mvn package -DskipTests
+
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
+```
+
+### 前端Dockerfile (hr-web/Dockerfile)
+
+```dockerfile
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+### 一键启动
+
+```bash
 docker-compose up -d
-
-# 查看日志
-docker-compose logs -f
 ```
 
-### 3.3 初始化数据
+## 五、常用命令
 
 ```bash
-# 进入MySQL容器
-docker exec -it hr-mysql mysql -uroot -p123456
+# 查看后端日志
+journalctl -u hr-backend -f
 
-# 执行初始化SQL
-source /docker-entrypoint-initdb.d/schema.sql
+# 重启后端
+systemctl restart hr-backend
+
+# 查看后端状态
+systemctl status hr-backend
+
+# 查看Nginx日志
+tail -f /var/log/nginx/hr-access.log
+
+# 数据库备份
+mysqldump -u hr_user -p hr_system > backup_$(date +%Y%m%d).sql
+
+# 数据库恢复
+mysql -u hr_user -p hr_system < backup_20240101.sql
 ```
 
-## 四、配置说明
+## 六、安全配置
 
-### 4.1 环境变量
-
-创建 `.env` 文件:
-
-```env
-# MySQL配置
-MYSQL_ROOT_PASSWORD=123456
-MYSQL_DATABASE=hr_system
-
-# 后端配置
-SERVER_PORT=8080
-JWT_SECRET=your-jwt-secret-key
-
-# 前端配置
-VITE_API_BASE_URL=http://localhost:8080
-```
-
-### 4.2 端口说明
-
-| 服务 | 端口 | 说明 |
-|-----|------|------|
-| Nginx | 80 | 前端访问 |
-| Spring Boot | 8080 | 后端API |
-| MySQL | 3306 | 数据库 |
-
-### 4.3 目录结构
-
-```
-/opt/hr-system/
-├── deploy.sh              # 部署脚本
-├── docker-compose.yml     # Docker编排
-├── hr-admin/              # 后端代码
-├── hr-web/                # 前端代码
-├── nginx/                 # Nginx配置
-├── mysql/                 # MySQL数据
-└── logs/                  # 日志目录
-```
-
-## 五、运维命令
+### 1. 防火墙
 
 ```bash
-# 启动服务
-docker-compose up -d
-
-# 停止服务
-docker-compose down
-
-# 重启服务
-docker-compose restart
-
-# 查看日志
-docker-compose logs -f hr-admin
-docker-compose logs -f hr-web
-
-# 进入容器
-docker exec -it hr-admin bash
-docker exec -it hr-mysql mysql -uroot -p123456
-
-# 备份数据库
-docker exec hr-mysql mysqldump -uroot -p123456 hr_system > backup_$(date +%Y%m%d).sql
-
-# 恢复数据库
-docker exec -i hr-mysql mysql -uroot -p123456 hr_system < backup_20240101.sql
+# 开放端口
+firewall-cmd --permanent --add-port=80/tcp
+firewall-cmd --permanent --add-port=443/tcp
+firewall-cmd --reload
 ```
 
-## 六、更新部署
+### 2. HTTPS配置 (使用Let's Encrypt)
 
 ```bash
-# 拉取最新代码
-git pull
+# 安装certbot
+yum install -y certbot python3-certbot-nginx
 
-# 重新构建
-docker-compose build
+# 获取证书
+certbot --nginx -d your-domain.com
 
-# 重启服务
-docker-compose up -d
+# 自动续期
+echo "0 0 1 * * root certbot renew --quiet" | crontab -
 ```
 
-## 七、默认账号
+### 3. 修改JWT密钥
 
-| 用户名 | 密码 | 角色 |
-|--------|------|------|
-| admin | admin123 | 总经理(GM) |
-| hr001 | admin123 | HR专员 |
+在生产环境中，务必修改JWT密钥：
 
-## 八、常见问题
+```yaml
+jwt:
+  secret: 请使用至少256位的随机字符串
+```
 
-### 8.1 端口被占用
+生成密钥命令:
 ```bash
-# 查看端口占用
-netstat -tlnp | grep :80
-netstat -tlnp | grep :8080
-
-# 修改docker-compose.yml中的端口映射
+openssl rand -base64 64
 ```
 
-### 8.2 内存不足
+## 七、性能优化
+
+### 1. JVM参数
+
 ```bash
-# 调整JVM参数
-# 在docker-compose.yml中添加:
-environment:
-  - JAVA_OPTS=-Xms512m -Xmx1024m
+# 修改systemd服务
+ExecStart=/usr/bin/java -Xms1g -Xmx2g -XX:+UseG1GC -jar hr-admin-1.0.0.jar
 ```
 
-### 8.3 数据库连接失败
+### 2. MySQL优化
+
+```sql
+-- my.cnf
+[mysqld]
+innodb_buffer_pool_size = 1G
+max_connections = 500
+query_cache_size = 64M
+```
+
+### 3. Nginx缓存
+
+```nginx
+location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+    expires 30d;
+    add_header Cache-Control "public, immutable";
+}
+```
+
+## 八、故障排查
+
 ```bash
-# 检查MySQL是否启动
-docker-compose ps hr-mysql
+# 后端无法启动
+journalctl -u hr-backend -n 100
 
-# 查看MySQL日志
-docker-compose logs hr-mysql
+# 数据库连接失败
+mysql -u hr_user -p -h localhost hr_system
+
+# 端口占用
+netstat -tlnp | grep -E '8080|80'
+
+# 查看进程
+ps aux | grep java
 ```
+
+## 九、初始账号
+
+- 管理员: admin / admin123
+- HR专员: hr001 / admin123
+
+**生产环境请务必修改密码！**

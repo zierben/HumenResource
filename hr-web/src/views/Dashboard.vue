@@ -255,7 +255,7 @@ const fetchSummary = async () => {
       stats.value[0].trend = data.personnelTrend || 0
       stats.value[1].value = data.totalSuppliers || 0
       stats.value[2].value = data.activeProjects || 0
-      stats.value[3].value = data.totalCost ? (data.totalCost / 10000).toFixed(1) : 0
+      stats.value[3].value = data.totalCost ? Number((data.totalCost / 10000).toFixed(1)) : 0
       stats.value[3].trend = data.costTrend || 0
       
       updateBanners()

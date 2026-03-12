@@ -9,8 +9,7 @@ export const useUserStore = defineStore('user', () => {
   const isLoggedIn = computed(() => !!token.value)
   const isAdmin = computed(() => {
     const role = userInfo.value?.role
-    if (role === 'ADMIN') return true
-    return ['GM', 'VP'].includes(role)
+    return ['ADMIN', 'GM', 'VP'].includes(role)
   })
 
   async function login(username, password) {

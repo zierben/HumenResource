@@ -360,12 +360,12 @@ const userInitial = computed(() => {
 })
 
 const roleMap = {
+  ADMIN: { name: '管理员', type: 'danger' },
   GM: { name: '总经理', type: 'danger' },
   VP: { name: '副总', type: 'warning' },
   DEPT_HEAD: { name: '部门长', type: 'primary' },
   PM: { name: '项目经理', type: 'success' },
-  HR: { name: 'HR', type: 'info' },
-  ADMIN: { name: '管理员', type: 'danger' }
+  HR: { name: 'HR', type: 'info' }
 }
 
 const getRoleName = (role) => roleMap[role]?.name || role

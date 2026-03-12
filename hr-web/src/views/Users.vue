@@ -52,6 +52,7 @@
         </el-form-item>
         <el-form-item label="角色" required>
           <el-select v-model="form.role" style="width: 100%">
+            <el-option label="管理员" value="ADMIN" />
             <el-option label="总经理" value="GM" />
             <el-option label="副总" value="VP" />
             <el-option label="部门长" value="DEPT_HEAD" />
@@ -112,12 +113,12 @@ const resetForm = reactive({
 })
 
 const roleMap = {
+  ADMIN: { name: '管理员', type: 'danger' },
   GM: { name: '总经理', type: 'danger' },
   VP: { name: '副总', type: 'warning' },
   DEPT_HEAD: { name: '部门长', type: 'primary' },
   PM: { name: '项目经理', type: 'success' },
-  HR: { name: 'HR', type: 'info' },
-  ADMIN: { name: '管理员', type: 'danger' }
+  HR: { name: 'HR', type: 'info' }
 }
 
 const getRoleName = (role) => roleMap[role]?.name || role

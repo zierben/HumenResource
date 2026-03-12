@@ -118,11 +118,11 @@ const rules = {
 }
 
 const testAccounts = [
-  { username: 'admin', password: 'admin123', name: '系统管理员', roleName: '总经理 (GM)', color: '#f56c6c' },
-  { username: 'ceo', password: 'admin123', name: '张伟华', roleName: 'CEO', color: '#f56c6c' },
+  { username: 'admin', password: 'admin123', name: '超级管理员', roleName: '管理员', color: '#f56c6c' },
+  { username: 'gm001', password: 'admin123', name: '张总', roleName: '总经理', color: '#f56c6c' },
   { username: 'vp_tech', password: 'admin123', name: '李明强', roleName: '副总-技术', color: '#e6a23c' },
-  { username: 'vp_hr', password: 'admin123', name: '王晓红', roleName: '副总-人事', color: '#e6a23c' },
-  { username: 'dept_dev', password: 'admin123', name: '陈志远', roleName: '部门长-研发', color: '#409eff' },
+  { username: 'dept_dev', password: 'admin123', name: '陈志远', roleName: '部门长', color: '#409eff' },
+  { username: 'pm_erp', password: 'admin123', name: '吴鹏', roleName: '项目经理', color: '#67c23a' },
   { username: 'hr001', password: 'admin123', name: '孙丽娜', roleName: 'HR专员', color: '#909399' }
 ]
 

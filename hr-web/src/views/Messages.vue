@@ -20,6 +20,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="content" label="内容" min-width="250" show-overflow-tooltip />
+        <el-table-column prop="userName" label="接收人" width="120">
+          <template #default="{ row }">
+            {{ getUserName(row.userId) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="type" label="类型" width="100">
           <template #default="{ row }">
             <el-tag :type="getTypeStyle(row.type)" size="small">{{ getTypeText(row.type) }}</el-tag>
@@ -55,8 +60,15 @@
     
     <el-dialog v-model="showDialog" title="发送消息" width="500px">
       <el-form :model="form" label-width="80px">
-        <el-form-item label="用户ID">
-          <el-input-number v-model="form.userId" :min="1" style="width: 100%" />
+        <el-form-item label="接收人" required>
+          <el-select v-model="form.userId" filterable placeholder="请选择接收人" style="width: 100%">
+            <el-option 
+              v-for="user in userList" 
+              :key="user.id" 
+              :label="`${user.realName} (${user.username})`" 
+              :value="user.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="标题" required>
           <el-input v-model="form.title" placeholder="请输入消息标题" />
@@ -82,6 +94,7 @@
     <el-dialog v-model="showViewDialog" title="消息详情" width="500px">
       <el-descriptions :column="1" border>
         <el-descriptions-item label="标题">{{ currentMessage.title }}</el-descriptions-item>
+        <el-descriptions-item label="接收人">{{ getUserName(currentMessage.userId) }}</el-descriptions-item>
         <el-descriptions-item label="类型">
           <el-tag :type="getTypeStyle(currentMessage.type)" size="small">{{ getTypeText(currentMessage.type) }}</el-tag>
         </el-descriptions-item>
@@ -116,6 +129,7 @@ const pageSize = ref(10)
 const total = ref(0)
 
 const messageList = ref([])
+const userList = ref([])
 const currentMessage = ref({})
 
 const form = reactive({
@@ -141,6 +155,11 @@ const getRowClass = ({ row }) => {
   return row.isRead ? '' : 'unread-row'
 }
 
+const getUserName = (userId) => {
+  const user = userList.value.find(u => u.id === userId)
+  return user ? user.realName : `ID:${userId}`
+}
+
 const fetchData = async () => {
   loading.value = true
   try {
@@ -153,6 +172,17 @@ const fetchData = async () => {
     console.error(e)
   } finally {
     loading.value = false
+  }
+}
+
+const fetchUsers = async () => {
+  try {
+    const res = await request.get('/users', { params: { pageNum: 1, pageSize: 100 } })
+    if (res.code === 200) {
+      userList.value = res.data.records || res.data
+    }
+  } catch (e) {
+    console.error(e)
   }
 }
 
@@ -193,7 +223,7 @@ const markAsRead = async (row) => {
 }
 
 const handleSubmit = async () => {
-  if (!form.title || !form.content) {
+  if (!form.userId || !form.title || !form.content) {
     ElMessage.warning('请填写必填项')
     return
   }
@@ -224,6 +254,7 @@ const handleDelete = async (row) => {
 
 onMounted(() => {
   fetchData()
+  fetchUsers()
 })
 </script>
 

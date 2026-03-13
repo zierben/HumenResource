@@ -20,6 +20,13 @@ public class SysUser {
     private Integer level;
     @TableField("manager_id")
     private Long managerId;
+    
+    @TableField("dept_id")
+    private Long deptId;
+    
+    @TableField("is_manager")
+    private Integer isManager;
+    
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
     

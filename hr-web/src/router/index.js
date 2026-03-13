@@ -105,13 +105,13 @@ const routes = [
     path: '/logs',
     name: 'Logs',
     component: () => import('@/views/Logs.vue'),
-    meta: { requiresAuth: true, title: '操作日志', roles: ['GM', 'VP'] }
+    meta: { requiresAuth: true, title: '操作日志', roles: ['ADMIN'] }
   },
   {
     path: '/workflow',
     name: 'Workflow',
     component: () => import('@/views/Workflow.vue'),
-    meta: { requiresAuth: true, title: '工作流定义', roles: ['GM', 'VP'] }
+    meta: { requiresAuth: true, title: '工作流定义', roles: ['ADMIN'] }
   },
   {
     path: '/todo',
@@ -135,25 +135,25 @@ const routes = [
     path: '/settings',
     name: 'Settings',
     component: () => import('@/views/Settings.vue'),
-    meta: { requiresAuth: true, title: '系统设置', roles: ['GM', 'VP'] }
+    meta: { requiresAuth: true, title: '系统设置', roles: ['ADMIN'] }
   },
   {
     path: '/settings/users',
     name: 'Users',
     component: () => import('@/views/Users.vue'),
-    meta: { requiresAuth: true, title: '用户管理', roles: ['GM', 'VP', 'DEPT_HEAD'] }
+    meta: { requiresAuth: true, title: '用户管理', roles: ['ADMIN'] }
   },
   {
     path: '/settings/sync',
     name: 'Sync',
     component: () => import('@/views/Sync.vue'),
-    meta: { requiresAuth: true, title: '数据同步', roles: ['GM', 'VP'] }
+    meta: { requiresAuth: true, title: '数据同步', roles: ['ADMIN'] }
   },
   {
     path: '/settings/dict',
     name: 'Dict',
     component: () => import('@/views/Dict.vue'),
-    meta: { requiresAuth: true, title: '字典管理', roles: ['GM', 'VP'] }
+    meta: { requiresAuth: true, title: '字典管理', roles: ['ADMIN'] }
   }
 ]
 

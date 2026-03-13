@@ -195,6 +195,11 @@ Content-Security-Policy: default-src 'self'
 | 缺少安全响应头 | ✅ 已修复 | 配置CSP、X-Frame-Options、HSTS |
 | SQL日志输出敏感数据 | ✅ 已修复 | 移除log-impl配置 |
 | 敏感信息明文存储 | ✅ 已修复 | 使用环境变量配置 |
+| XSS风险 | ✅ 已修复 | 添加XssUtil输入过滤工具 |
+| 前端硬编码测试账号 | ✅ 已修复 | 移除密码，仅保留用户名 |
+| 密码复杂度无验证 | ✅ 已修复 | 添加PasswordChangeDTO验证 |
+| 无Refresh Token | ✅ 已修复 | 实现刷新Token机制 |
+| Token有效期过长 | ✅ 已修复 | 缩短至2小时 |
 
 ### 新增安全组件
 
@@ -203,6 +208,8 @@ Content-Security-Policy: default-src 'self'
 3. **TokenBlacklistService.java** - Token黑名单服务
 4. **LoginAttemptService.java** - 登录失败限制服务
 5. **GlobalExceptionHandler.java** - 全局异常处理
+6. **XssUtil.java** - XSS输入过滤工具
+7. **PasswordChangeDTO.java** - 密码复杂度验证
 
 ### 环境变量配置
 

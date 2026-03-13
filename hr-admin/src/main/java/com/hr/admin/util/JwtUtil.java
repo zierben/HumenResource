@@ -14,11 +14,14 @@ import java.util.Map;
 @Component
 public class JwtUtil {
     
-    @Value("${jwt.secret:HR2024OutsourcingManagementSecretKey}")
+    @Value("${jwt.secret:HR2024OutsourcingManagementSecretKeyMustBeAtLeast256BitsLongForSecurity}")
     private String secret;
     
-    @Value("${jwt.expiration:86400000}")
+    @Value("${jwt.expiration:7200000}")
     private Long expiration;
+    
+    @Value("${jwt.refresh-expiration:604800000}")
+    private Long refreshExpiration;
     
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
@@ -28,11 +31,25 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", username);
         claims.put("role", role);
+        claims.put("type", "access");
         return Jwts.builder()
                 .claims(claims)
                 .subject(username)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSecretKey())
+                .compact();
+    }
+    
+    public String generateRefreshToken(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("username", username);
+        claims.put("type", "refresh");
+        return Jwts.builder()
+                .claims(claims)
+                .subject(username)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + refreshExpiration))
                 .signWith(getSecretKey())
                 .compact();
     }
@@ -53,6 +70,15 @@ public class JwtUtil {
         return parseToken(token).get("role", String.class);
     }
     
+    public boolean isRefreshToken(String token) {
+        try {
+            String type = parseToken(token).get("type", String.class);
+            return "refresh".equals(type);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
     public boolean isExpired(String token) {
         try {
             return parseToken(token).getExpiration().before(new Date());
@@ -67,6 +93,14 @@ public class JwtUtil {
             return !isExpired(token);
         } catch (Exception e) {
             return false;
+        }
+    }
+    
+    public long getExpirationTime(String token) {
+        try {
+            return parseToken(token).getExpiration().getTime();
+        } catch (Exception e) {
+            return 0;
         }
     }
 }

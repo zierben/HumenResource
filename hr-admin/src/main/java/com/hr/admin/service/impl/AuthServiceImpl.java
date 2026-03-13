@@ -32,9 +32,11 @@ public class AuthServiceImpl implements AuthService {
         }
         
         String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
         
         LoginVO vo = new LoginVO();
         vo.setToken(token);
+        vo.setRefreshToken(refreshToken);
         vo.setUsername(user.getUsername());
         vo.setRealName(user.getRealName());
         vo.setRole(user.getRole());

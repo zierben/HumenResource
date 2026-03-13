@@ -118,12 +118,12 @@ const rules = {
 }
 
 const testAccounts = [
-  { username: 'admin', password: 'admin123', name: '超级管理员', roleName: '管理员', color: '#f56c6c' },
-  { username: 'gm001', password: 'admin123', name: '张总', roleName: '总经理', color: '#f56c6c' },
-  { username: 'vp_tech', password: 'admin123', name: '李明强', roleName: '副总-技术', color: '#e6a23c' },
-  { username: 'dept_dev', password: 'admin123', name: '陈志远', roleName: '部门长', color: '#409eff' },
-  { username: 'pm_erp', password: 'admin123', name: '吴鹏', roleName: '项目经理', color: '#67c23a' },
-  { username: 'hr001', password: 'admin123', name: '孙丽娜', roleName: 'HR专员', color: '#909399' }
+  { username: 'admin', name: '超级管理员', roleName: '管理员', color: '#f56c6c' },
+  { username: 'ceo', name: '张伟华', roleName: '总经理', color: '#f56c6c' },
+  { username: 'vp_tech', name: '李明强', roleName: '副总-技术', color: '#e6a23c' },
+  { username: 'dept_dev', name: '陈志远', roleName: '部门长', color: '#409eff' },
+  { username: 'pm_erp', name: '吴鹏', roleName: '项目经理', color: '#67c23a' },
+  { username: 'hr001', name: '孙丽娜', roleName: 'HR专员', color: '#909399' }
 ]
 
 onMounted(() => {
@@ -160,19 +160,8 @@ const handleLogin = async () => {
 
 const quickLogin = async (account) => {
   form.username = account.username
-  form.password = account.password
-  loading.value = true
-  try {
-    const result = await userStore.login(account.username, account.password)
-    if (result.success) {
-      ElMessage.success(`欢迎回来，${account.name}`)
-      router.push('/')
-    } else {
-      ElMessage.error(result.message || '登录失败')
-    }
-  } finally {
-    loading.value = false
-  }
+  form.password = ''
+  formRef.value?.validateField('username')
 }
 </script>
 

@@ -29,7 +29,8 @@ mybatis-plus:
 
 jwt:
   secret: ${JWT_SECRET:HR2024OutsourcingManagementSecretKeyMustBeAtLeast256BitsLongForSecurity}
-  expiration: ${JWT_EXPIRATION:86400000}
+  expiration: ${JWT_EXPIRATION:7200000}
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
 
 zentao:
   enabled: false

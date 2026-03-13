@@ -17,6 +17,17 @@ public class HrConstants {
         public static final String LEAVE = "LEAVE";
         public static final String TRANSFER = "TRANSFER";
         public static final String OFF_DUTY = "OFF_DUTY";
+        
+        public static String getText(String status) {
+            switch (status) {
+                case PENDING_ENTRY: return "待入场";
+                case ON_DUTY: return "在岗";
+                case LEAVE: return "请假";
+                case TRANSFER: return "调配中";
+                case OFF_DUTY: return "已离场";
+                default: return "未知";
+            }
+        }
     }
     
     public static final class SettlementStatus {
@@ -32,5 +43,11 @@ public class HrConstants {
         public static final String A = "A";
         public static final String B = "B";
         public static final String C = "C";
+    }
+    
+    public static final class WorkHoursStatus {
+        public static final String PENDING = "PENDING";
+        public static final String APPROVED = "APPROVED";
+        public static final String REJECTED = "REJECTED";
     }
 }

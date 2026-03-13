@@ -1,5 +1,6 @@
 package com.hr.admin.controller;
 
+import com.hr.admin.annotation.OperationLog;
 import com.hr.admin.dto.Result;
 import com.hr.admin.entity.HrRequirement;
 import com.hr.admin.service.HrRequirementService;
@@ -40,12 +41,14 @@ public class HrRequirementController {
     }
     
     @PostMapping
+    @OperationLog(module = "需求管理", action = "新增需求", targetType = "需求")
     public Result<Void> save(@RequestBody HrRequirement hrRequirement) {
         hrRequirementService.saveRequirement(hrRequirement);
         return Result.success();
     }
     
     @PutMapping("/{id}")
+    @OperationLog(module = "需求管理", action = "编辑需求", targetType = "需求")
     public Result<Void> update(@PathVariable Long id, @RequestBody HrRequirement hrRequirement) {
         hrRequirement.setId(id);
         hrRequirementService.updateRequirement(hrRequirement);
@@ -53,6 +56,7 @@ public class HrRequirementController {
     }
     
     @PostMapping("/{id}/approve")
+    @OperationLog(module = "需求管理", action = "审批需求", targetType = "需求")
     public Result<Void> approve(@PathVariable Long id, @RequestParam Integer status, 
                                 @RequestParam(required = false) String rejectReason) {
         hrRequirementService.approve(id, status, rejectReason);
@@ -60,6 +64,7 @@ public class HrRequirementController {
     }
     
     @DeleteMapping("/{id}")
+    @OperationLog(module = "需求管理", action = "删除需求", targetType = "需求")
     public Result<Void> delete(@PathVariable Long id) {
         hrRequirementService.removeById(id);
         return Result.success();

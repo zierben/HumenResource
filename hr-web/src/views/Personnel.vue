@@ -412,11 +412,32 @@ const handleTransfer = async () => {
   }
 }
 
-const handleExport = () => {
-  const params = new URLSearchParams()
-  if (searchName.value) params.append('name', searchName.value)
-  if (searchStatus.value) params.append('status', searchStatus.value)
-  window.open(`http://localhost:8080/api/personnel/export?${params.toString()}`, '_blank')
+const handleExport = async () => {
+  try {
+    const params = new URLSearchParams()
+    if (searchName.value) params.append('name', searchName.value)
+    if (searchStatus.value) params.append('status', searchStatus.value)
+    
+    const token = localStorage.getItem('token')
+    const response = await fetch(`/api/personnel/export?${params.toString()}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+    
+    if (!response.ok) {
+      ElMessage.error('导出失败')
+      return
+    }
+    
+    const blob = await response.blob()
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = '人员列表.xlsx'
+    a.click()
+    window.URL.revokeObjectURL(url)
+  } catch (e) {
+    ElMessage.error('导出失败')
+  }
 }
 
 onMounted(() => {

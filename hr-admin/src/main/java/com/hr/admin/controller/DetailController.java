@@ -42,8 +42,19 @@ public class DetailController {
                 .eq(HrPersonnel::getProjectId, id)
                 .list();
 
-        Map<Long, HrSupplier> supplierMap = hrSupplierService.list().stream()
-                .collect(Collectors.toMap(HrSupplier::getId, s -> s));
+        List<Long> supplierIds = personnelList.stream()
+                .map(HrPersonnel::getSupplierId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+
+        Map<Long, HrSupplier> supplierMap = supplierIds.isEmpty() 
+                ? new HashMap<>()
+                : hrSupplierService.lambdaQuery()
+                        .in(HrSupplier::getId, supplierIds)
+                        .list()
+                        .stream()
+                        .collect(Collectors.toMap(HrSupplier::getId, s -> s));
 
         Map<Long, List<HrPersonnel>> groupedBySupplier = personnelList.stream()
                 .filter(p -> p.getSupplierId() != null)

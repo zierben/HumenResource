@@ -2,6 +2,7 @@ package com.hr.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hr.admin.constant.HrConstants;
 import com.hr.admin.entity.HrWorkHours;
 import com.hr.admin.mapper.HrWorkHoursMapper;
 import com.hr.admin.service.HrWorkHoursService;
@@ -25,7 +26,7 @@ public class HrWorkHoursServiceImpl extends ServiceImpl<HrWorkHoursMapper, HrWor
     public void approve(Long id) {
         HrWorkHours workHours = new HrWorkHours();
         workHours.setId(id);
-        workHours.setStatus("APPROVED");
+        workHours.setStatus(HrConstants.WorkHoursStatus.APPROVED);
         workHours.setUpdateTime(LocalDateTime.now());
         updateById(workHours);
     }
@@ -60,6 +61,6 @@ public class HrWorkHoursServiceImpl extends ServiceImpl<HrWorkHoursMapper, HrWor
     @Override
     @Transactional
     public void syncFromZentao(String date) {
-        
+        throw new UnsupportedOperationException("禅道同步功能尚未实现，请联系管理员配置禅道API");
     }
 }

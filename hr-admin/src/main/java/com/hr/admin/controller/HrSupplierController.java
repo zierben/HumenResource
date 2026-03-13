@@ -1,5 +1,6 @@
 package com.hr.admin.controller;
 
+import com.hr.admin.annotation.OperationLog;
 import com.hr.admin.dto.Result;
 import com.hr.admin.entity.HrSupplier;
 import com.hr.admin.service.HrSupplierService;
@@ -39,12 +40,14 @@ public class HrSupplierController {
     }
     
     @PostMapping
+    @OperationLog(module = "供应商管理", action = "新增供应商", targetType = "供应商")
     public Result<Void> save(@RequestBody HrSupplier hrSupplier) {
         hrSupplierService.save(hrSupplier);
         return Result.success();
     }
     
     @PutMapping("/{id}")
+    @OperationLog(module = "供应商管理", action = "编辑供应商", targetType = "供应商")
     public Result<Void> update(@PathVariable Long id, @RequestBody HrSupplier hrSupplier) {
         hrSupplier.setId(id);
         hrSupplierService.updateById(hrSupplier);
@@ -52,6 +55,7 @@ public class HrSupplierController {
     }
     
     @DeleteMapping("/{id}")
+    @OperationLog(module = "供应商管理", action = "删除供应商", targetType = "供应商")
     public Result<Void> delete(@PathVariable Long id) {
         hrSupplierService.removeById(id);
         return Result.success();

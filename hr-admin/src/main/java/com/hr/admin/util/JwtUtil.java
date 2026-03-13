@@ -14,7 +14,7 @@ import java.util.Map;
 @Component
 public class JwtUtil {
     
-    @Value("${jwt.secret:HR2024OutsourcingManagementSecretKeyMustBeAtLeast256BitsLongForSecurity}")
+    @Value("${jwt.secret}")
     private String secret;
     
     @Value("${jwt.expiration:7200000}")

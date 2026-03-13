@@ -1,5 +1,6 @@
 package com.hr.admin.controller;
 
+import com.hr.admin.annotation.OperationLog;
 import com.hr.admin.dto.Result;
 import com.hr.admin.entity.HrProject;
 import com.hr.admin.service.HrProjectService;
@@ -44,12 +45,14 @@ public class HrProjectController {
     }
     
     @PostMapping
+    @OperationLog(module = "项目管理", action = "新增项目", targetType = "项目")
     public Result<Void> save(@RequestBody HrProject hrProject) {
         hrProjectService.save(hrProject);
         return Result.success();
     }
     
     @PutMapping("/{id}")
+    @OperationLog(module = "项目管理", action = "编辑项目", targetType = "项目")
     public Result<Void> update(@PathVariable Long id, @RequestBody HrProject hrProject) {
         hrProject.setId(id);
         hrProjectService.updateById(hrProject);
@@ -57,6 +60,7 @@ public class HrProjectController {
     }
     
     @DeleteMapping("/{id}")
+    @OperationLog(module = "项目管理", action = "删除项目", targetType = "项目")
     public Result<Void> delete(@PathVariable Long id) {
         hrProjectService.removeById(id);
         return Result.success();

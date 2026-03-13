@@ -77,13 +77,18 @@ public class WfInstanceServiceImpl extends ServiceImpl<WfInstanceMapper, WfInsta
         record.setComment(comment);
         wfRecordService.save(record);
         
-        if (WfConstants.NodeType.END.equals(currentNode.getNextNodeId() == null ? null : 
-            wfNodeService.getById(currentNode.getNextNodeId()) != null ? 
-            wfNodeService.getById(currentNode.getNextNodeId()).getNodeType() : null)) {
+        Long nextNodeId = currentNode.getNextNodeId();
+        boolean isEndNode = false;
+        if (nextNodeId != null) {
+            WfNode nextNode = wfNodeService.getById(nextNodeId);
+            isEndNode = nextNode != null && WfConstants.NodeType.END.equals(nextNode.getNodeType());
+        }
+        
+        if (isEndNode) {
             instance.setStatus(WfConstants.InstanceStatus.APPROVED);
             instance.setCurrentNodeId(null);
         } else {
-            instance.setCurrentNodeId(currentNode.getNextNodeId());
+            instance.setCurrentNodeId(nextNodeId);
         }
         updateById(instance);
     }

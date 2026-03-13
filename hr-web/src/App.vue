@@ -305,7 +305,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useTheme } from '@/composables/useTheme'
@@ -327,9 +327,23 @@ const showSettings = ref(false)
 const searchKeyword = ref('')
 const searchResults = ref([])
 const showSearchResults = ref(false)
-const messageCount = ref(5)
+const messageCount = ref(0)
 const showBreadcrumb = ref(true)
 const showSearch = ref(true)
+
+const fetchMessageCount = async () => {
+  try {
+    const userId = userInfo.value?.id
+    if (userId) {
+      const res = await request.get('/messages', { params: { pageNum: 1, pageSize: 1, userId } })
+      if (res.code === 200) {
+        messageCount.value = res.data.total || 0
+      }
+    }
+  } catch (e) {
+    console.error('获取消息数量失败', e)
+  }
+}
 
 const typeIcons = {
   personnel: 'User',
@@ -403,6 +417,19 @@ const handleSearch = async () => {
     }
   }
 }
+
+watch(userInfo, (newVal) => {
+  if (newVal?.id) {
+    fetchMessageCount()
+  }
+}, { immediate: true })
+
+onMounted(() => {
+  if (userInfo.value?.id) {
+    fetchMessageCount()
+  }
+})
+
 </script>
 
 <style>

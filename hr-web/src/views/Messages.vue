@@ -117,9 +117,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/api/index'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
+const currentUserId = computed(() => userStore.userInfo?.id)
 
 const loading = ref(false)
 const showDialog = ref(false)
@@ -163,7 +167,11 @@ const getUserName = (userId) => {
 const fetchData = async () => {
   loading.value = true
   try {
-    const res = await request.get('/messages', { params: { pageNum: currentPage.value, pageSize: pageSize.value } })
+    const params = { pageNum: currentPage.value, pageSize: pageSize.value }
+    if (currentUserId.value) {
+      params.userId = currentUserId.value
+    }
+    const res = await request.get('/messages', { params })
     if (res.code === 200) {
       messageList.value = res.data.records
       total.value = res.data.total

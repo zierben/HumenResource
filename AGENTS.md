@@ -247,3 +247,20 @@ DELETE /api/departments/{id}/members/{userId} # 移除部门成员
 **前端页面**: `/org-chart` (OrgChart.vue)
 
 **数据迁移**: 执行 `migrate_to_department.sql` 迁移现有用户数据
+
+执行 `update_data_and_generate_workflow.sql` 更新历史数据日期并生成流程测试数据
+
+### 4. 测试数据说明
+
+**数据更新脚本**: `hr-admin/src/main/resources/update_data_and_generate_workflow.sql`
+
+**功能**:
+- 将2024年历史数据更新为2026年
+- 生成待办任务（需求审批、入场审批、结算审批、离场审批）
+- 生成历史审批记录
+
+**待办任务类型**:
+- REQUIREMENT: 需求审批
+- ENTRY: 入场审批
+- SETTLEMENT: 结算审批
+- EXIT: 离场审批

@@ -68,9 +68,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import * as echarts from 'echarts'
 import request from '@/api/index'
 
+const router = useRouter()
 const costChartRef = ref(null)
 const supplierChartRef = ref(null)
 const trendChartRef = ref(null)
@@ -108,8 +110,20 @@ const initCostChart = async () => {
         series: [{
           type: 'pie',
           radius: ['40%', '70%'],
-          data: res.data
+          data: res.data,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
         }]
+      })
+      chart.on('click', (params) => {
+        if (params.data && params.data.projectId) {
+          router.push(`/projects/${params.data.projectId}`)
+        }
       })
     }
   } catch (e) {
@@ -131,8 +145,20 @@ const initSupplierChart = async () => {
         series: [{
           type: 'pie',
           radius: ['40%', '70%'],
-          data: res.data
+          data: res.data,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
         }]
+      })
+      chart.on('click', (params) => {
+        if (params.data && params.data.supplierId) {
+          router.push(`/suppliers/${params.data.supplierId}`)
+        }
       })
     }
   } catch (e) {

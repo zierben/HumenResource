@@ -42,6 +42,12 @@ const routes = [
     meta: { requiresAuth: true, title: '供应商管理' }
   },
   {
+    path: '/suppliers/:id',
+    name: 'SupplierDetail',
+    component: () => import('@/views/SupplierDetail.vue'),
+    meta: { requiresAuth: true, title: '供应商详情' }
+  },
+  {
     path: '/personnel',
     name: 'Personnel',
     component: () => import('@/views/Personnel.vue'),

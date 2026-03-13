@@ -14,7 +14,7 @@
     
     <el-row :gutter="20" v-loading="loading">
       <el-col :span="8" v-for="supplier in suppliers" :key="supplier.id">
-        <el-card shadow="hover" class="supplier-card">
+        <el-card shadow="hover" class="supplier-card" @click="goToDetail(supplier)">
           <div class="supplier-header">
             <h3>{{ supplier.supplierName }}</h3>
             <el-tag :type="supplier.level === 'A' ? 'success' : supplier.level === 'B' ? 'warning' : 'danger'">
@@ -43,7 +43,7 @@
             <span>交付质量</span>
             <el-progress :percentage="supplier.deliveryRate || 0" :stroke-width="8" />
           </div>
-          <div class="supplier-footer">
+          <div class="supplier-footer" @click.stop>
             <el-button type="primary" link @click="openEditDialog(supplier)">编辑</el-button>
             <el-button type="danger" link @click="handleDelete(supplier)">删除</el-button>
           </div>
@@ -96,9 +96,11 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '@/api/index'
 
+const router = useRouter()
 const loading = ref(false)
 const showDialog = ref(false)
 const isEdit = ref(false)
@@ -196,6 +198,10 @@ const handleDelete = async (row) => {
   } catch (e) {
     if (e !== 'cancel') ElMessage.error('删除失败')
   }
+}
+
+const goToDetail = (supplier) => {
+  router.push(`/suppliers/${supplier.id}`)
 }
 
 onMounted(() => {

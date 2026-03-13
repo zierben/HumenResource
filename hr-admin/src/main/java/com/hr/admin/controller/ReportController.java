@@ -51,6 +51,7 @@ public class ReportController {
                     Map<String, Object> item = new HashMap<>();
                     item.put("name", p.getProjectName());
                     item.put("value", projectCostMap.getOrDefault(p.getId(), BigDecimal.ZERO));
+                    item.put("projectId", p.getId());
                     return item;
                 })
                 .sorted((a, b) -> ((BigDecimal) b.get("value")).compareTo((BigDecimal) a.get("value")))
@@ -75,6 +76,7 @@ public class ReportController {
                     Map<String, Object> item = new HashMap<>();
                     item.put("name", s.getSupplierName());
                     item.put("value", supplierCountMap.getOrDefault(s.getId(), 0L));
+                    item.put("supplierId", s.getId());
                     return item;
                 })
                 .sorted((a, b) -> ((Long) b.get("value")).compareTo((Long) a.get("value")))

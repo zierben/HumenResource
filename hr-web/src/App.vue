@@ -146,16 +146,40 @@
           </el-breadcrumb>
         </div>
         <div class="header-center">
-          <el-input 
-            v-model="searchKeyword" 
-            placeholder="搜索功能、人员、项目..." 
-            class="search-input"
-            @keyup.enter="handleSearch"
-          >
-            <template #prefix>
-              <el-icon><Search /></el-icon>
-            </template>
-          </el-input>
+          <div class="search-wrapper">
+            <el-input 
+              v-model="searchKeyword" 
+              placeholder="搜索功能、人员、项目..." 
+              class="search-input"
+              @keyup.enter="handleSearch"
+              @focus="showSearchResults = searchResults.length > 0"
+              @input="showSearchResults = searchResults.length > 0 && searchKeyword.trim().length > 0"
+            >
+              <template #prefix>
+                <el-icon><Search /></el-icon>
+              </template>
+            </el-input>
+            <div v-if="showSearchResults && searchResults.length > 0" class="search-dropdown">
+              <div 
+                v-for="item in searchResults" 
+                :key="item.type + item.id" 
+                class="search-result-item"
+                @click="handleSearchResultClick(item)"
+              >
+                <el-icon>
+                  <User v-if="item.type === 'personnel'" />
+                  <Folder v-else-if="item.type === 'project'" />
+                  <OfficeBuilding v-else-if="item.type === 'supplier'" />
+                  <Document v-else-if="item.type === 'contract'" />
+                  <Search v-else />
+                </el-icon>
+                <div class="search-result-content">
+                  <div class="search-result-name">{{ item.name }}</div>
+                  <div class="search-result-desc">{{ item.description }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="header-right">
           <el-tooltip content="全屏" placement="bottom">
@@ -254,6 +278,57 @@
             <span class="info-value">L{{ userInfo?.level || '-' }}</span>
           </div>
         </div>
+        <el-divider v-if="!isManager" />
+        <div class="profile-attendance" v-if="!isManager && attendanceData">
+          <div class="section-title">本月考勤</div>
+          <div class="attendance-stats">
+            <div class="stat-item normal">
+              <span class="stat-value">{{ attendanceData.normalDays }}</span>
+              <span class="stat-label">正常</span>
+            </div>
+            <div class="stat-item leave">
+              <span class="stat-value">{{ attendanceData.leaveDays }}</span>
+              <span class="stat-label">请假</span>
+            </div>
+            <div class="stat-item absent">
+              <span class="stat-value">{{ attendanceData.absentDays }}</span>
+              <span class="stat-label">旷工</span>
+            </div>
+          </div>
+          <div class="attendance-detail" v-if="attendanceData.leaveList?.length > 0 || attendanceData.absentList?.length > 0">
+            <el-collapse>
+              <el-collapse-item name="leave" v-if="attendanceData.leaveList?.length > 0">
+                <template #title>
+                  <span class="collapse-title">请假记录 ({{ attendanceData.leaveList.length }})</span>
+                </template>
+                <div class="record-list">
+                  <div class="record-item" v-for="(item, idx) in attendanceData.leaveList" :key="'leave'+idx">
+                    <span>{{ item.date }}</span>
+                    <span class="remark">{{ item.remark || '请假' }}</span>
+                  </div>
+                </div>
+              </el-collapse-item>
+              <el-collapse-item name="absent" v-if="attendanceData.absentList?.length > 0">
+                <template #title>
+                  <span class="collapse-title">旷工记录 ({{ attendanceData.absentList.length }})</span>
+                </template>
+                <div class="record-list">
+                  <div class="record-item" v-for="(item, idx) in attendanceData.absentList" :key="'absent'+idx">
+                    <span>{{ item.date }}</span>
+                    <span class="remark">{{ item.remark || '旷工' }}</span>
+                  </div>
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+          <el-empty v-else description="暂无考勤异常记录" :image-size="60" />
+        </div>
+        <div class="profile-attendance" v-else-if="!isManager && attendanceLoading">
+          <div class="loading-attendance">
+            <el-icon class="is-loading"><Loading /></el-icon>
+            <span>加载考勤数据...</span>
+          </div>
+        </div>
         <el-divider />
         <div class="profile-actions">
           <el-button type="primary" round>修改密码</el-button>
@@ -310,7 +385,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useTheme } from '@/composables/useTheme'
 import {
-  Expand, Fold
+  Expand, Fold, Search, User, Folder, OfficeBuilding, Document, Loading
 } from '@element-plus/icons-vue'
 
 import { ElMessage } from 'element-plus'
@@ -330,6 +405,32 @@ const showSearchResults = ref(false)
 const messageCount = ref(0)
 const showBreadcrumb = ref(true)
 const showSearch = ref(true)
+
+const attendanceData = ref(null)
+const attendanceLoading = ref(false)
+
+const fetchAttendance = async () => {
+  if (!userInfo.value?.username) return
+  try {
+    attendanceLoading.value = true
+    const res = await request.get('/work-hours/my-attendance', { 
+      params: { username: userInfo.value.username } 
+    })
+    if (res.code === 200) {
+      attendanceData.value = res.data
+    }
+  } catch (e) {
+    console.error('获取考勤数据失败', e)
+  } finally {
+    attendanceLoading.value = false
+  }
+}
+
+watch(() => showProfile.value, (val) => {
+  if (val) {
+    fetchAttendance()
+  }
+})
 
 const fetchMessageCount = async () => {
   try {
@@ -368,6 +469,11 @@ const handleSearchResultClick = (item) => {
 const isLoggedIn = computed(() => userStore.isLoggedIn)
 const isAdmin = computed(() => userStore.isAdmin)
 const userInfo = computed(() => userStore.userInfo)
+
+const isManager = computed(() => {
+  const role = userInfo.value?.role
+  return role && ['ADMIN', 'GM', 'VP', 'DEPT_HEAD', 'PM', 'HR'].includes(role)
+})
 
 const userInitial = computed(() => {
   return userInfo.value?.realName?.charAt(0) || 'U'
@@ -598,6 +704,71 @@ onMounted(() => {
   box-shadow: 0 0 0 1px var(--primary-color);
 }
 
+.search-wrapper {
+  position: relative;
+  width: 300px;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.search-result-item:hover {
+  background: #f5f7fa;
+}
+
+.search-result-item:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.search-result-item:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.search-result-item .el-icon {
+  font-size: 20px;
+  color: var(--primary-color);
+}
+
+.search-result-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-result-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #303133;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-result-desc {
+  font-size: 12px;
+  color: #909399;
+  margin-top: 2px;
+}
+
 .header-right {
   display: flex;
   align-items: center;
@@ -752,6 +923,103 @@ onMounted(() => {
   gap: 12px;
   justify-content: center;
   padding-top: 20px;
+}
+
+.profile-attendance {
+  padding: 0 4px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #303133;
+  margin-bottom: 16px;
+}
+
+.attendance-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 16px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  min-width: 70px;
+}
+
+.stat-item.normal {
+  background: #f0f9eb;
+}
+
+.stat-item.leave {
+  background: #fef0f0;
+}
+
+.stat-item.absent {
+  background: #fdf6ec;
+}
+
+.stat-value {
+  display: block;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.stat-item.normal .stat-value {
+  color: #67c23a;
+}
+
+.stat-item.leave .stat-value {
+  color: #f56c6c;
+}
+
+.stat-item.absent .stat-value {
+  color: #e6a23c;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #909399;
+}
+
+.attendance-detail {
+  margin-top: 12px;
+}
+
+.collapse-title {
+  font-size: 14px;
+  color: #606266;
+}
+
+.record-list {
+  padding: 8px 0;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #ebeef5;
+  font-size: 13px;
+}
+
+.record-item:last-child {
+  border-bottom: none;
+}
+
+.record-item .remark {
+  color: #909399;
+}
+
+.loading-attendance {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  color: #909399;
 }
 
 /* 设置抽屉 */

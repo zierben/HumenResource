@@ -63,4 +63,25 @@ public class HrWorkHoursServiceImpl extends ServiceImpl<HrWorkHoursMapper, HrWor
     public void syncFromZentao(String date) {
         throw new UnsupportedOperationException("禅道同步功能尚未实现，请联系管理员配置禅道API");
     }
+    
+    @Override
+    public boolean existsDuplicate(Long personnelId, Long projectId, LocalDate workDate, Long excludeId) {
+        LambdaQueryWrapper<HrWorkHours> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(HrWorkHours::getPersonnelId, personnelId);
+        wrapper.eq(HrWorkHours::getProjectId, projectId);
+        wrapper.eq(HrWorkHours::getWorkDate, workDate);
+        if (excludeId != null) {
+            wrapper.ne(HrWorkHours::getId, excludeId);
+        }
+        return count(wrapper) > 0;
+    }
+    
+    @Override
+    public boolean saveWithDuplicateCheck(HrWorkHours workHours) {
+        if (existsDuplicate(workHours.getPersonnelId(), workHours.getProjectId(), 
+                           workHours.getWorkDate(), workHours.getId())) {
+            return false;
+        }
+        return save(workHours);
+    }
 }

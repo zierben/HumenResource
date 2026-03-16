@@ -16,6 +16,11 @@
             </el-avatar>
             <h3>{{ personnel?.name }}</h3>
             <el-tag :type="statusType">{{ personnel?.status }}</el-tag>
+            <div class="action-buttons" v-if="personnel?.status === '离场'">
+              <el-button type="success" size="small" @click="handleReEntry">
+                重新入场
+              </el-button>
+            </div>
           </div>
           <el-descriptions :column="1" border size="small" class="info-list">
             <el-descriptions-item label="工号">{{ personnel?.personnelCode }}</el-descriptions-item>
@@ -111,6 +116,49 @@
             </el-timeline-item>
           </el-timeline>
         </el-card>
+
+        <el-card shadow="hover" class="section-card">
+          <template #header>本月考勤</template>
+          <div class="attendance-stats" v-if="attendanceData">
+            <div class="stat-item normal">
+              <span class="stat-value">{{ attendanceData.normalDays }}</span>
+              <span class="stat-label">正常</span>
+            </div>
+            <div class="stat-item leave">
+              <span class="stat-value">{{ attendanceData.leaveDays }}</span>
+              <span class="stat-label">请假</span>
+            </div>
+            <div class="stat-item absent">
+              <span class="stat-value">{{ attendanceData.absentDays }}</span>
+              <span class="stat-label">旷工</span>
+            </div>
+          </div>
+          <el-empty description="暂无考勤数据" v-if="!attendanceData" :image-size="60" />
+          <el-collapse v-if="attendanceData && (attendanceData.leaveList?.length > 0 || attendanceData.absentList?.length > 0)">
+            <el-collapse-item name="leave" v-if="attendanceData.leaveList?.length > 0">
+              <template #title>
+                <span class="collapse-title">请假记录 ({{ attendanceData.leaveList.length }})</span>
+              </template>
+              <div class="record-list">
+                <div class="record-item" v-for="(item, idx) in attendanceData.leaveList" :key="'leave'+idx">
+                  <span>{{ item.date }}</span>
+                  <span class="remark">{{ item.remark || '请假' }}</span>
+                </div>
+              </div>
+            </el-collapse-item>
+            <el-collapse-item name="absent" v-if="attendanceData.absentList?.length > 0">
+              <template #title>
+                <span class="collapse-title">旷工记录 ({{ attendanceData.absentList.length }})</span>
+              </template>
+              <div class="record-list">
+                <div class="record-item" v-for="(idx) in attendanceData.absentList" :key="'absent'+idx">
+                  <span>{{ idx.date }}</span>
+                  <span class="remark">{{ idx.remark || '旷工' }}</span>
+                </div>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </el-card>
       </el-col>
     </el-row>
 
@@ -199,6 +247,7 @@ const assets = ref([])
 const salaryHistory = ref([])
 const projectHistory = ref([])
 const statistics = ref({ totalProjects: 0, totalWorkHours: 0, avgScore: null })
+const attendanceData = ref(null)
 
 const salaryChartRef = ref(null)
 let salaryChart = null
@@ -209,6 +258,27 @@ const statusType = computed(() => {
   if (s === '离场') return 'info'
   return 'warning'
 })
+
+const handleReEntry = async () => {
+  try {
+    await ElMessageBox.confirm('确定要让该人员重新入场吗？', '确认重新入场', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+    const res = await request.post(`/personnel/${personnelId}/re-entry`)
+    if (res.code === 200) {
+      ElMessage.success('操作成功')
+      fetchData()
+    } else {
+      ElMessage.error(res.message || '操作失败')
+    }
+  } catch (e) {
+    if (e !== 'cancel') {
+      console.error(e)
+    }
+  }
+}
 
 const assetDialogVisible = ref(false)
 const isEditAsset = ref(false)
@@ -231,6 +301,10 @@ const fetchData = async () => {
       nextTick(() => {
         renderSalaryChart()
       })
+    }
+    const attRes = await request.get(`/work-hours/personnel/${personnelId}/attendance`)
+    if (attRes.code === 200) {
+      attendanceData.value = attRes.data
     }
   } catch (e) {
     console.error(e)
@@ -356,6 +430,10 @@ onMounted(() => {
   margin: 15px 0 10px;
 }
 
+.action-buttons {
+  margin-top: 15px;
+}
+
 .info-list {
   margin-top: 20px;
 }
@@ -394,5 +472,78 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.attendance-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 16px;
+}
+
+.attendance-stats .stat-item {
+  text-align: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  min-width: 70px;
+}
+
+.attendance-stats .stat-item.normal {
+  background: #f0f9eb;
+}
+
+.attendance-stats .stat-item.leave {
+  background: #fef0f0;
+}
+
+.attendance-stats .stat-item.absent {
+  background: #fdf6ec;
+}
+
+.attendance-stats .stat-value {
+  display: block;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.attendance-stats .stat-item.normal .stat-value {
+  color: #67c23a;
+}
+
+.attendance-stats .stat-item.leave .stat-value {
+  color: #f56c6c;
+}
+
+.attendance-stats .stat-item.absent .stat-value {
+  color: #e6a23c;
+}
+
+.attendance-stats .stat-label {
+  font-size: 12px;
+  color: #909399;
+}
+
+.collapse-title {
+  font-size: 14px;
+  color: #606266;
+}
+
+.record-list {
+  padding: 8px 0;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #ebeef5;
+  font-size: 13px;
+}
+
+.record-item:last-child {
+  border-bottom: none;
+}
+
+.record-item .remark {
+  color: #909399;
 }
 </style>

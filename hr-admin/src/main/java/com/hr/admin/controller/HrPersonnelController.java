@@ -83,6 +83,13 @@ public class HrPersonnelController {
         return Result.success();
     }
     
+    @PostMapping("/{id}/re-entry")
+    @OperationLog(module = "人员管理", action = "重新入场", targetType = "人员")
+    public Result<Void> reEntry(@PathVariable Long id) {
+        hrPersonnelService.reEntry(id);
+        return Result.success();
+    }
+    
     @PostMapping("/{id}/transfer")
     @OperationLog(module = "人员管理", action = "人员调配", targetType = "人员")
     public Result<Void> transfer(@PathVariable Long id, @RequestParam Long targetProjectId) {

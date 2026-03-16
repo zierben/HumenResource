@@ -27,15 +27,31 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 
+# JWT配置
 jwt:
   secret: ${JWT_SECRET:HR2024OutsourcingManagementSecretKeyMustBeAtLeast256BitsLongForSecurity}
   expiration: ${JWT_EXPIRATION:7200000}
   refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
 
+# 安全配置
+security:
+  ip-whitelist-enabled: ${IP_WHITELIST_ENABLED:false}
+  ip-whitelist: ${IP_WHITELIST:}
+
+# 限流配置
+rate-limit:
+  enabled: ${RATE_LIMIT_ENABLED:false}
+
+# CORS配置，多域名用逗号分隔
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:}
+
+# 禅道集成
 zentao:
   enabled: false
   sync-days: 30
 
+# 财务系统集成
 finance:
   enabled: false
   base-url: https://your-finance-system.com/api

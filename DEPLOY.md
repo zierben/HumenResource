@@ -457,3 +457,93 @@ ps aux | grep java
 - HR专员: hr001 / admin123
 
 **生产环境请务必修改密码！**
+
+## 十、Git工作流程与CI/CD
+
+### 1. Git分支策略
+
+```
+master (生产) ◄──────────────────────┐
+    ↑                                │
+    │ PR + 标签 v1.0.0              │
+    │                                │
+release/v1.0.0 (发布) ◄──┐          │
+    ↑                      │          │
+    │ PR (测试通过)        │          │
+    │                      │          │
+develop (开发) ◄───────────┘          │
+    ↑                                │
+    │ PR                            │
+    │                                │
+feature/xxx ◄───────────────────────┘
+```
+
+### 2. 分支说明
+
+| 分支 | 用途 | 生命周期 |
+|------|------|----------|
+| `master` | 生产环境 | 永久 |
+| `develop` | 开发环境 | 永久 |
+| `release/v*.*.*` | 发布测试 | 临时 |
+| `feature/*` | 新功能开发 | 临时 |
+
+### 3. 开发流程
+
+```bash
+# 1. 从develop创建功能分支
+git checkout -b feature/xxx develop
+
+# 2. 开发完成后提交
+git add .
+git commit -m "feat: 添加新功能"
+
+# 3. 推送到远程
+git push origin feature/xxx
+
+# 4. 创建PR合并到develop
+# 在Git平台操作，CI自动运行测试
+
+# 5. 测试通过后，创建release分支
+git checkout -b release/v1.0.0 develop
+
+# 6. 发布测试通过后，合并到master并打标签
+git checkout master
+git merge release/v1.0.0
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin master --tags
+```
+
+### 4. CI/CD自动化
+
+已配置GitHub Actions (`.github/workflows/ci-cd.yml`)，自动完成：
+- ✅ 代码编译
+- ✅ 单元测试  
+- ✅ 构建前端dist
+- ✅ 部署到测试环境 (develop/release分支)
+- ✅ 部署到生产环境 (master分支)
+
+### 5. 部署密钥配置
+
+在Git仓库Settings → Secrets中添加：
+
+| 密钥 | 说明 |
+|------|------|
+| `DB_HOST` | 数据库地址 |
+| `DB_PORT` | 数据库端口 |
+| `DB_NAME` | 数据库名称 |
+| `DB_USER` | 数据库用户名 |
+| `DB_PASSWORD` | 数据库密码 |
+| `JWT_SECRET` | JWT密钥(至少256位) |
+| `TEST_SERVER_HOST` | 测试服务器IP |
+| `TEST_SERVER_USER` | 测试服务器用户名 |
+| `TEST_SERVER_KEY` | SSH私钥 |
+| `PROD_SERVER_HOST` | 生产服务器IP |
+| `PROD_SERVER_USER` | 生产服务器用户名 |
+| `PROD_SERVER_KEY` | SSH私钥 |
+
+### 6. 版本更新
+
+每次发布需要：
+1. 在 `sql/update.sql` 添加数据库变更
+2. 更新版本号 (pom.xml / package.json)
+3. 提交代码 → PR → 测试 → 合并 → 打标签

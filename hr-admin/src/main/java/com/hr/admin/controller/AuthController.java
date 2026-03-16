@@ -10,13 +10,17 @@ import com.hr.admin.security.TokenBlacklistService;
 import com.hr.admin.service.AuthService;
 import com.hr.admin.service.SysUserService;
 import com.hr.admin.util.JwtUtil;
+import com.hr.admin.util.LogDesensitizationUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -33,24 +37,43 @@ public class AuthController {
     @OperationLog(module = "系统管理", action = "登录", targetType = "用户")
     public Result<LoginVO> login(@RequestBody LoginDTO loginDTO, HttpServletRequest request) {
         String username = loginDTO.getUsername();
+        String clientIp = getClientIp(request);
         
         if (loginAttemptService.isLocked(username)) {
             long remaining = loginAttemptService.getLockTimeRemaining(username);
+            log.warn("登录尝试-账户锁定: username={}, ip={}, remaining={}分钟", username, clientIp, remaining);
             return Result.error("账户已锁定，请" + remaining + "分钟后再试");
         }
         
         try {
             LoginVO result = authService.login(loginDTO);
             loginAttemptService.loginSucceeded(username);
+            log.info("用户登录成功: username={}, ip={}, role={}", username, clientIp, result.getRole());
             return Result.success(result);
         } catch (RuntimeException e) {
             loginAttemptService.loginFailed(username);
             int remaining = loginAttemptService.getRemainingAttempts(username);
+            log.warn("登录失败: username={}, ip={}, reason={}, remaining={}", 
+                    username, clientIp, LogDesensitizationUtil.desensitize(e.getMessage()), remaining);
             if (remaining <= 3 && remaining > 0) {
                 return Result.error("用户名或密码错误，剩余" + remaining + "次尝试机会");
             }
             return Result.error(e.getMessage());
         }
+    }
+    
+    private String getClientIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("X-Real-IP");
+        }
+        if (ip == null || ip.isEmpty()) {
+            ip = request.getRemoteAddr();
+        }
+        if (ip != null && ip.contains(",")) {
+            ip = ip.split(",")[0].trim();
+        }
+        return ip;
     }
     
     @PostMapping("/logout")

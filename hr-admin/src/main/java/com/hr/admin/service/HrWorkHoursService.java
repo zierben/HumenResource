@@ -10,4 +10,6 @@ public interface HrWorkHoursService extends IService<HrWorkHours> {
     void approve(Long id);
     List<Map<String, Object>> getSummary(LocalDate startDate, LocalDate endDate, Long projectId);
     void syncFromZentao(String date);
+    boolean saveWithDuplicateCheck(HrWorkHours workHours);
+    boolean existsDuplicate(Long personnelId, Long projectId, LocalDate workDate, Long excludeId);
 }

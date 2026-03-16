@@ -51,6 +51,17 @@ public class HrPersonnelServiceImpl extends ServiceImpl<HrPersonnelMapper, HrPer
     
     @Override
     @Transactional
+    public void reEntry(Long id) {
+        HrPersonnel personnel = new HrPersonnel();
+        personnel.setId(id);
+        personnel.setStatus(HrConstants.PersonnelStatus.ON_DUTY);
+        personnel.setEntryDate(java.time.LocalDate.now());
+        personnel.setUpdateTime(LocalDateTime.now());
+        updateById(personnel);
+    }
+    
+    @Override
+    @Transactional
     public void transfer(Long id, Long targetProjectId) {
         HrPersonnel personnel = new HrPersonnel();
         personnel.setId(id);
